@@ -60,14 +60,18 @@ public:
 	}
 
 	~HashTable(){
+		cout << "Destructor!!\n";
 		delete [] table;
 		table = 0;
+		cout << "Destructor!!\n";
 	}
 
 	bool insert(K key, V value);
 	bool _delete(K key);
 	V get(K key);
 	int size(){return entries;}
+	void printAll();
+
 
 private:
 	Entry<K,V> *table;
@@ -97,17 +101,24 @@ int HashTable<K,V>::step(int i)
 	return (i*(i+1))>>1;
 }
 
+template <typename T>
+inline int comp (T const& a, T const& b)
+{
+    return a == b ? 0: a>b?1:-1;
+}
+
+
 template<class K, class V>
 bool HashTable<K,V>::Do(int operation, K key, V& value)
 {
-	int index = hash(key)%_SIZE, stepi = 0, prev=index;
+	int index = hash(key)%_SIZE, stepi = 0, prev=index, orignal = index;
 	Entry<K,V> *entry = &table[index];
-	//cout << "Insert: "<<key<<" "<<value << "\n";
+	cout << "Operation: "<<operation << " "<<key<<" "<<value << "\n";
 	while(entry!=NULL && entry->isInit()){
-		//cout << "At = " << prev << endl;
+		cout << "At = " << prev << endl;
 		switch(operation){
 		case SEARCH:
-			if(!entry->isTombstone() &&key == entry->getKey()){
+			if(!entry->isTombstone() && comp(key,entry->getKey())==0){
 				value = entry->getValue();
 				return true;
 			}
@@ -122,16 +133,16 @@ bool HashTable<K,V>::Do(int operation, K key, V& value)
 			break;
 
 		case UPDATE:
-			if(!entry->isTombstone() &&key == entry->getKey()){
+			if(!entry->isTombstone() && comp(key,entry->getKey())==0){
 				entry->setValue(value);
 				return true;
 			}
 			break;
 
 		case DELETE:
-			if(!entry->isTombstone() &&key == entry->getKey()){
-				delete(entry);
-				entry = 0;
+			if(!entry->isTombstone() && comp(key,entry->getKey())==0){
+
+				entry->setTombstone(true);
 				entries--;
 				return true;
 			}
@@ -139,6 +150,8 @@ bool HashTable<K,V>::Do(int operation, K key, V& value)
 		}
 
 		entry = &table[prev=((index+step(++stepi))%_SIZE)];
+		if(prev==orignal)
+			break;
 	}
 
 	if(operation == INSERT){
@@ -177,6 +190,21 @@ V HashTable<K,V>::get(K key)
 template <class K, class V>
 void HashTable<K,V>::resize()
 {
+
+}
+
+template <class K, class V>
+void HashTable<K,V>::printAll()
+{
+
+		int e=1;
+		cout << "===============================HashTable===============================\n";
+		for(int i=0;i<_SIZE;i++){
+			if(table[i].isInit()&& !table[i].isTombstone()){
+				cout << "Entry #"<<e++<<": "<<"[Key="<<table[i].getKey()<<", Value="<<table[i].getValue()<<"]\n";
+			}
+		}
+		cout << "=======================================================================\n";
 
 }
 

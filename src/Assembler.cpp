@@ -7,21 +7,38 @@
 //============================================================================
 
 #include <iostream>
+#include <sstream>
 #include "HashTable.cpp"
 using namespace std;
 
 int main(){
 
-	HashTable<int,int> ht;
-	for(int i=0;i<16;i++)
-		ht.insert(i,i*100);
+	HashTable<string,string> ht;
+	string key="Key#",num,aa,bb,val="Value#";
+	for(int i=0;i<16;i++){
+		num = static_cast<ostringstream*>( &(ostringstream() << i) )->str();
+		aa = key + num;
+		bb = val + num;
+		ht.insert(aa,bb);
+	}
 	cout << ht.size()<<endl;
-	for(int i=0;i<16;i++)
-	cout << ht.get(i) <<endl;
 
-	for(int i=0;i<16;i++)
-		cout << ht._delete(i)<<endl;
+	ht.printAll();
+	for(int i=0;i<16;i++){
+		num = static_cast<ostringstream*>( &(ostringstream() << i) )->str();
+		aa = key + num;
+		cout << ht._delete(aa)<<endl;
+	}
 
+	val = "second#";
+	for(int i=20;i<30;i++){
+		num = static_cast<ostringstream*>( &(ostringstream() << i) )->str();
+		aa = key + num;
+		bb = val + num;
+		ht.insert(aa,bb);
+	}
+
+	ht.printAll();
 	cout << ht.size()<<endl;
 	return 0;
 }
