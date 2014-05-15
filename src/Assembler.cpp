@@ -40,5 +40,16 @@ int main(){
 
 	ht.printAll();
 	cout << ht.size()<<endl;
+
+	cout << (ht.containsKey("Key#22")?"Found\n":"NOT Found\n");
+	cout << (ht.containsValue("second#22")?"Found\n":"NOT Found\n");
+
+	ht.iterator();
+	Entry<string,string>* entry;
+	while(ht.hasNext()){
+		entry = ht.next();
+		cout<<"Key = "<< entry->getKey()<<" | Value = "<< entry->getValue()<<endl;
+	}
+
 	return 0;
 }

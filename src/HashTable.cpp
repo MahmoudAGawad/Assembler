@@ -54,7 +54,7 @@ template <class K, class V>
 class HashTable {
 public:
 	HashTable(){
-		entries = 0;
+		entries = cursor = 0;
 		_SIZE=16;
 		table = new Entry<K,V>[_SIZE];
 	}
@@ -71,15 +71,39 @@ public:
 	V get(K key);
 	int size(){return entries;}
 	void printAll();
+	bool containsKey(K key);
+	bool containsValue(V value);
+	void iterator(){
+		cursor = getNext(0);
+	}
 
+	Entry<K,V>* next(){
+		Entry<K,V>* e=0;
+		int index=cursor;
+		if(cursor==_SIZE){return e;}
+		cursor=getNext(cursor+1);
+		return &table[index];
+	}
+
+	bool hasNext(){
+		return cursor<_SIZE;
+	}
 
 private:
 	Entry<K,V> *table;
+	int cursor;
 	int hash(K key);
 	int step(int k);// quadratic probing >> step (i*(i+1)/2)
 	bool Do(int operation, K key, V& value);
 	void resize();
-
+	int getNext(int cursor){
+		for(;cursor<_SIZE;cursor++){
+			if(!table[cursor].isTombstone() && table[cursor].isInit()){
+				break;
+			}
+		}
+		return cursor;
+	}
 
 protected:
 	int _SIZE, entries;
@@ -113,9 +137,9 @@ bool HashTable<K,V>::Do(int operation, K key, V& value)
 {
 	int index = hash(key)%_SIZE, stepi = 0, prev=index, orignal = index;
 	Entry<K,V> *entry = &table[index];
-	cout << "Operation: "<<operation << " "<<key<<" "<<value << "\n";
+	//cout << "Operation: "<<operation << " "<<key<<" "<<value << "\n";
 	while(entry!=NULL && entry->isInit()){
-		cout << "At = " << prev << endl;
+		//cout << "At = " << prev << endl;
 		switch(operation){
 		case SEARCH:
 			if(!entry->isTombstone() && comp(key,entry->getKey())==0){
@@ -168,7 +192,10 @@ bool HashTable<K,V>::Do(int operation, K key, V& value)
 template<class K, class V>
 bool HashTable<K,V>::insert(K key, V value)
 {
-	return Do(INSERT,key,value);
+	bool ret = Do(UPDATE,key,value)?true:Do(INSERT,key,value);
+	if(entries*100/_SIZE>75) // if load factor is greater than 75%
+		resize();
+	return ret;
 }
 
 template<class K, class V>
@@ -188,23 +215,60 @@ V HashTable<K,V>::get(K key)
 }
 
 template <class K, class V>
+bool HashTable<K,V>::containsKey(K key)
+{
+  V retval;
+  return Do(SEARCH,key,retval)?true:false;
+}
+
+template <class K, class V>
+bool HashTable<K,V>::containsValue(V value)
+{
+	iterator();
+	while(hasNext()){
+		if(comp(next()->getValue(),value)==0){
+			return true;
+		}
+	}
+	cursor = 0;
+	return false;
+}
+
+
+
+template <class K, class V>
 void HashTable<K,V>::resize()
 {
+	int prevSize = _SIZE;
+	Entry<K,V>* prevTable = table;
+	table = new Entry<K,V>[_SIZE<<=1];
+	Entry<K,V>* temp;
+	entries = 0;
+	for(int i=0;i<prevSize;i++){
+		temp = &prevTable[i];
+		if(temp!=NULL && temp->isInit() && !temp->isTombstone()){
+			V v = temp->getValue();
+			if(!Do(INSERT, temp->getKey(), v )){
+				cout << "An Error occured while resizing!\n";
+			}
+			temp->setValue(v);
+		}
+	}
 
+	delete[] prevTable;
 }
 
 template <class K, class V>
 void HashTable<K,V>::printAll()
 {
 
-		int e=1;
-		cout << "===============================HashTable===============================\n";
+		cout << "===============================HashTable["<<entries<<" keys]===============================\n[";
 		for(int i=0;i<_SIZE;i++){
 			if(table[i].isInit()&& !table[i].isTombstone()){
-				cout << "Entry #"<<e++<<": "<<"[Key="<<table[i].getKey()<<", Value="<<table[i].getValue()<<"]\n";
+				cout <<" [Key="<<table[i].getKey()<<", Value="<<table[i].getValue()<<"],";
 			}
 		}
-		cout << "=======================================================================\n";
+		cout << "]\n==================================================================================\n";
 
 }
 
