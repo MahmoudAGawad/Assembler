@@ -7,23 +7,30 @@
 
 #ifndef VALIDATOR_H_
 #define VALIDATOR_H_
-
+#include "HashTable.cpp"
+#include "operationInfo.h"
 class Validator{
 
 public :
-    Validator(HashTable<string , operationInfo> opTable);
+    Validator(HashTable<string , string> opTable);
+
     Validator();  //  empty costructor
     ~Validator(); // destructor
 
     void checkSyntax(string label , string operation , string operand); // check the syntax of the operation
+    bool checkLabelSyntax(string label); // to check if the label is correct
+    bool checkOpernadSyntax(string operand);
+    bool checkDirectiveOpernadSyntax(string operation  , string operand);
+    int validHexa(string num); // to check if the num is correct hexa if true return the value ,else return -1
+    int validInt(string num); // to check if the num is correct integer
     bool checkValid();
     string getError();
 
 
 protected :
-    HashTable<string , int> sympolTable; // the table containing all the sympols
-    HashTable<string , operationInfo> operationTable; // the table containing all the informathion about the operation
-    string error ;                       // the error message
+    HashTable<string , int> sympolTable;    // the table containing all the sympols
+    HashTable<string , int> operationTable; // the table containing all the informathion about the operation
+    string error ;                          // the error message
 
 
 };
