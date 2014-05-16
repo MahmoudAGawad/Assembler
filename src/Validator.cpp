@@ -5,21 +5,19 @@
  *      Author: mostafa22
  */
 
-#include <iostream>
-#include <strings.h>
+//#include "operationInfo.h"
+
 #include "Validator.h"
-#include "HashTable.cpp"
 #include "operationInfo.h"
-#include <math.h>
-using namespace std;
 
 
 Validator :: Validator(){
   // empty constructor
 }
 
-Validator :: Validator(HashTable<string , string> opTable){
+Validator :: Validator(HashTable<int , int> opTable){
 
+    operationInfo x ;
 //operationTable = opTable;
 
 }
@@ -269,7 +267,7 @@ bool Validator :: checkDirectiveOpernadSyntax(string operation , string operand)
             }
 
             if(!someThingWrong)
-
+            int x = 0;
             else return false;
 
 
@@ -293,10 +291,10 @@ void Validator :: checkSyntax(string label , string operation , string operand){
 
         // if the operation is corect
 
-        operationInfo opInfor = operationTable.get(operation);
-        int howManyoperand = opInfor.howManyOperand;
-        bool registerInfo = opInfor.registeronly;
-        bool dirctive = opInfor.directive;
+        //operationInfo* t = new operationInfo();
+        int howManyoperand = 0;
+        bool registerInfo = 0;
+        bool dirctive = 0;
 
         if( dirctive ){
                 // check if the operand is correct
@@ -320,7 +318,7 @@ void Validator :: checkSyntax(string label , string operation , string operand){
 
                 if(operand == "RSUB"){
                     // WARNNING
-                    error = "warning this operation does not need any operand the operand will be ignored ."
+                    error = "warning this operation does not need any operand the operand will be ignored .";
 
                     return;
 

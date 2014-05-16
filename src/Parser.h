@@ -13,7 +13,7 @@ class Parser
     public:
         Parser();
      void setParsingLine(string str);
-bool isComment(vector<string> splittedWords);
+bool isComment();
   void parse();
   string getLabel();
   string getOperation();
@@ -29,6 +29,7 @@ bool isComment(vector<string> splittedWords);
      bool isCommentVar;
      bool isInValidVar;
  vector<string> split(string str);
+   bool checkComment(vector<string> splittedWords);
 void connectWords(vector<string> splittedWords);
 void connectOperand(vector<string> splittedWords);
 bool isRsub(vector<string> splittedWords);

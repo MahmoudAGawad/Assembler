@@ -3,18 +3,23 @@
 
 #include <iostream>
 #include <strings.h>
+#include <stdlib.h>
+#include <string>
 using namespace std;
 class operationInfo
 {
     public:
         operationInfo();
-        operationInfo(string name , bool need , int howMany);
+        operationInfo(string name , bool need , int howMany , bool dir);
         ~operationInfo();
-    protected:
     bool registeronly;
     string operationName;
     int howManyOperand;
     bool directive;
+
+    protected :
+    private:
+
 };
 
 #endif // OPERATIONINFO_H

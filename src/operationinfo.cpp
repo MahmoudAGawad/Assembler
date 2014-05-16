@@ -1,11 +1,10 @@
-#include "operationinfo.h"
-#include <iostream>
-#include <strings.h>
-using namespace std;
+#include "operationInfo.h"
+
 
 operationInfo::operationInfo()
 {
     //ctor
+    //temp;
 }
 
 
