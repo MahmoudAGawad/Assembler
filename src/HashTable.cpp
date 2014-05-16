@@ -7,6 +7,8 @@
 
 #include <iostream>
 #include <stdlib.h>
+#include <string>
+#include <functional>
 using namespace std;
 
 
@@ -50,6 +52,27 @@ private:
 
 };
 
+template <class T>
+class Hash {
+public:
+	static unsigned int hash(T key){
+		return (unsigned int)key;
+	}
+};
+
+template <>
+class Hash <string> {
+public:
+	static unsigned int hash(string key){
+		unsigned int hash = 5381;
+		int i=0,len = key.length();
+		while (i<len){
+		    hash = ((hash << 5) + hash) + key[i++];
+		}
+		return hash;
+	}
+};
+
 template <class K, class V>
 class HashTable {
 public:
@@ -60,7 +83,6 @@ public:
 	}
 
 	~HashTable(){
-		cout << "Destructor!!\n";
 		delete [] table;
 		table = 0;
 		cout << "Destructor!!\n";
@@ -92,8 +114,9 @@ public:
 private:
 	Entry<K,V> *table;
 	int cursor;
-	int hash(K key);
-	int step(int k);// quadratic probing >> step (i*(i+1)/2)
+	int step(int k){	// quadratic probing >> step (i*(i+1)/2)
+		return (k*(k+1))>>1;
+	}
 	bool Do(int operation, K key, V& value);
 	void resize();
 	int getNext(int cursor){
@@ -112,30 +135,18 @@ protected:
 
 
 
-template<class K, class V>
-int HashTable<K,V>::hash(K key)
-{
-
-	return 0;
-}
-
-template<class K, class V>
-int HashTable<K,V>::step(int i)
-{
-	return (i*(i+1))>>1;
-}
-
 template <typename T>
 inline int comp (T const& a, T const& b)
 {
-    return a == b ? 0: a>b?1:-1;
+    return a == b ? 0: a>b ? 1 : -1;
 }
 
 
 template<class K, class V>
 bool HashTable<K,V>::Do(int operation, K key, V& value)
 {
-	int index = hash(key)%_SIZE, stepi = 0, prev=index, orignal = index;
+	int index = Hash<K>::hash(key)%_SIZE;
+	int stepi = 0, prev=index, orignal = index;
 	Entry<K,V> *entry = &table[index];
 	//cout << "Operation: "<<operation << " "<<key<<" "<<value << "\n";
 	while(entry!=NULL && entry->isInit()){

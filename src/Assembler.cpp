@@ -51,5 +51,9 @@ int main(){
 		cout<<"Key = "<< entry->getKey()<<" | Value = "<< entry->getValue()<<endl;
 	}
 
+	HashTable<int,string> a;
+	a.insert(100,"File");
+	a.printAll();
+
 	return 0;
 }
