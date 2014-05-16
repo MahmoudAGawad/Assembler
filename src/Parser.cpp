@@ -60,17 +60,17 @@ void Parser::connectWords(vector<string> splittedWords){
 
         if(splittedWords.size()==1){
     operation=splittedWords.at(0);
-     cout<<"label    "<<label<<endl;
-     cout<<"operation   " <<operation<<endl;
-     cout<<"operand    "<<operand<<endl;
+    // cout<<"label    "<<label<<endl;
+   //  cout<<"operation   " <<operation<<endl;
+   //  cout<<"operand    "<<operand<<endl;
      }
 
     if(splittedWords.size()==2){
         operation=splittedWords.at(1);
         label=splittedWords.at(0);
-     cout<<"label    "<<label<<endl;
-     cout<<"operation   " <<operation<<endl;
-     cout<<"operand    "<<operand<<endl;
+   //  cout<<"label    "<<label<<endl;
+   //  cout<<"operation   " <<operation<<endl;
+   //  cout<<"operand    "<<operand<<endl;
 
     }
 
@@ -84,9 +84,9 @@ else{
 
   connectOperand(splittedWords);
 
-     cout<<"label    "<<label<<endl;
-     cout<<"operation   " <<operation<<endl;
-     cout<<"operand    "<<operand<<endl;
+  //   cout<<"label    "<<label<<endl;
+  //   cout<<"operation   " <<operation<<endl;
+  //   cout<<"operand    "<<operand<<endl;
 
 
              }
@@ -153,7 +153,7 @@ void Parser::connectOperand(vector<string> splittedWords){
      }
 
 
-    cout<<"there is a comma "<<endl;
+ //   cout<<"there is a comma "<<endl;
 
       }
 else{
