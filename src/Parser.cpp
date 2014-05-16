@@ -5,9 +5,7 @@
  *      Author: waleed Adel
  */
 
-
 #include "Parser.h"
-
 
 Parser::Parser()
 {
@@ -16,19 +14,15 @@ Parser::Parser()
  operation="";
  operand="";
  isCommentVar=false;
- isValidVar=false;
+ isInValidVar=false;
 }
 
 
 void Parser::parse(){
-
-vector<string> splittedWords;
-   string c= "stl str,x";
-
-   splittedWords=split(c);
-
+   vector<string> splittedWords;
+ //  string c= "stl str,x";
+   splittedWords=split(splittedLine);
     connectWords(splittedWords);
-
 }
 
 
@@ -57,7 +51,7 @@ void Parser::connectWords(vector<string> splittedWords){
 
  // not comment nor rsub
 
-  if(isComment(splittedWords)){
+ if(isComment(splittedWords)){
 
    isCommentVar=true;
   }
@@ -67,17 +61,16 @@ void Parser::connectWords(vector<string> splittedWords){
  }
 
 else{
-        if(splittedWords.size()>=2){
+        if(splittedWords.size()>5){isInValidVar=true;}
+        else if(splittedWords.size()>=2){
+
   connectOperand(splittedWords);
 
-     cout<<"label    "<<label<<endl;
-     cout<<"operation   " <<operation<<endl;
-     cout<<"operand    "<<operand<<endl;
              }
-
+    else{
+        isInValidVar=true;
+    }
 }
-
-
   // then add first label to first column of array if found
   // and operation to the second comlumn
   // and operand to the third column
@@ -87,7 +80,7 @@ else{
 
 void Parser::connectOperand(vector<string> splittedWords){
 
-  if(checkForComma(splittedWords)){
+   if(checkForComma(splittedWords)){
 
       int commaType=commaTypeMethod(splittedWords);
   //     cout<<commaType<<endl;
@@ -96,9 +89,10 @@ void Parser::connectOperand(vector<string> splittedWords){
  case 1:
         operand=splittedWords.at(splittedWords.size()-1);
       operation=splittedWords.at(splittedWords.size()-2);
-      if(splittedWords.size()>=3){
+      if(splittedWords.size()==3){
         label=splittedWords.at(splittedWords.size()-3);
       }
+      else{isInValidVar=true;}
      break;
  case 2:
       operand="";
@@ -108,8 +102,11 @@ void Parser::connectOperand(vector<string> splittedWords){
 
      operation=splittedWords.at(splittedWords.size()-4);
 
-     if(splittedWords.size()>4){
+     if(splittedWords.size()==5){
         label=splittedWords.at(splittedWords.size()-5);
+     }
+     else{
+        isInValidVar=true;
      }
      break;
  case 3:
@@ -118,25 +115,28 @@ void Parser::connectOperand(vector<string> splittedWords){
      operand+=splittedWords.at(splittedWords.size()-2);
      operand+=splittedWords.at(splittedWords.size()-1);
        operation=splittedWords.at(splittedWords.size()-3);
-     if(splittedWords.size()>3){
+     if(splittedWords.size()==4){
         label=splittedWords.at(splittedWords.size()-4);
+     }
+     else{
+        isInValidVar=true;
      }
      break;
   default:
+      isInValidVar=true;
     break;
      }
-
-
-    cout<<"there is a comma "<<endl;
 
       }
 else{
       operand=splittedWords.at(splittedWords.size()-1);
       operation=splittedWords.at(splittedWords.size()-2);
-      if(splittedWords.size()>=3){
+      if(splittedWords.size()==3){
         label=splittedWords.at(splittedWords.size()-3);
       }
-
+      else{
+        isInValidVar=true;
+      }
 }
 
 }
@@ -188,9 +188,6 @@ bool Parser::checkForComma(vector<string> splittedWords){
 return false;
 }
 
-
-
-
 int Parser::commaTypeMethod(vector<string> splittedWords){
 
 if(splittedWords.size()>1){
@@ -216,10 +213,10 @@ if(splittedWords.size()>1){
      }
 
 return 0;
-}
+     }
 
-bool Parser::isValid(){
-return isValidVar;
+bool Parser::isInValid(){
+return isInValidVar;
 }
 
 string Parser::getLabel(){

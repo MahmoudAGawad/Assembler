@@ -18,7 +18,7 @@ bool isComment(vector<string> splittedWords);
   string getLabel();
   string getOperation();
   string getOperand();
-  bool isValid();
+  bool isInValid();
        virtual ~Parser();
     protected:
     private:
@@ -27,7 +27,7 @@ bool isComment(vector<string> splittedWords);
      string operation;
      string operand;
      bool isCommentVar;
-     bool isValidVar;
+     bool isInValidVar;
  vector<string> split(string str);
 void connectWords(vector<string> splittedWords);
 void connectOperand(vector<string> splittedWords);
