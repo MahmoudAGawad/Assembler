@@ -1,3 +1,11 @@
+/*
+ * Validator.cpp
+ *
+ *  Created on: May 16, 2014
+ *      Author: waleed Adel
+ */
+
+
 #include "Parser.h"
 
 
@@ -139,6 +147,7 @@ bool Parser::isComment(vector<string> splittedWords){
 string str=splittedWords.at(0);
 
  if(str.at(0)=='.'){
+        isCommentVar=true;
          return true;
   }
  else{
@@ -208,6 +217,24 @@ if(splittedWords.size()>1){
 
 return 0;
 }
+
+bool Parser::isValid(){
+return isValidVar;
+}
+
+string Parser::getLabel(){
+return label;
+}
+
+string Parser::getOperation(){
+return operation;
+}
+
+string Parser::getOperand()
+{
+return operand;
+}
+
 
 
 Parser::~Parser()

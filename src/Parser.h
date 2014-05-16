@@ -15,6 +15,10 @@ class Parser
      void setParsingLine(string str);
 bool isComment(vector<string> splittedWords);
   void parse();
+  string getLabel();
+  string getOperation();
+  string getOperand();
+  bool isValid();
        virtual ~Parser();
     protected:
     private:
