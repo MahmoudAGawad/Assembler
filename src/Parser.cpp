@@ -3,13 +3,26 @@
 
 Parser::Parser()
 {
-    //ctor
+ splittedLine="";
+ label="";
+ operation="";
+ operand="";
+ isCommentVar=false;
+ isValidVar=false;
 }
 
-Parser::~Parser()
-{
-    //dtor
+
+void Parser::parse(){
+
+vector<string> splittedWords;
+   string c= "stl str,x";
+
+   splittedWords=split(c);
+
+    connectWords(splittedWords);
+
 }
+
 
 void Parser::setParsingLine(string str){
 splittedLine=str;
@@ -194,4 +207,10 @@ if(splittedWords.size()>1){
      }
 
 return 0;
+}
+
+
+Parser::~Parser()
+{
+    //dtor
 }
