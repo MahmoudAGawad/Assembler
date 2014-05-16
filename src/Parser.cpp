@@ -51,7 +51,7 @@ void Parser::connectWords(vector<string> splittedWords){
 
  // not comment nor rsub
 
- if(isComment(splittedWords)){
+ if(checkComment(splittedWords)){
 
    isCommentVar=true;
   }
@@ -142,7 +142,7 @@ else{
 }
 
 
-bool Parser::isComment(vector<string> splittedWords){
+bool Parser::checkComment(vector<string> splittedWords){
 
 string str=splittedWords.at(0);
 
@@ -217,6 +217,10 @@ return 0;
 
 bool Parser::isInValid(){
 return isInValidVar;
+}
+
+bool Parser::isComment(){
+return isCommentVar;
 }
 
 string Parser::getLabel(){
