@@ -3,6 +3,7 @@
 #include <sstream>
 #include <stdlib.h>
 #include <stdio.h>
+
 #include "Validator.h"
 #include "Reading.cpp"
 #include <iomanip>
@@ -10,6 +11,9 @@
 #include <fstream>
 #include <string>
 using namespace std;
+
+class Control{
+private :
 string completeString(string str,int len)
 {
     int l=str.length();
@@ -28,11 +32,14 @@ string completeAddress(string str)
     }
     return str;
 }
-int main()
+public :
+void control(char* fileName)
 {
     Parser parser;//Paser OBJECT
     Reading read;
+
     HashTable<string,operationInfo>*opTable =  read.read();
+
 
     Validator *validator=new Validator(*opTable);
     string label;
@@ -40,7 +47,7 @@ int main()
     string operand;
     string address;
     string line;
-    ifstream myfile ("src.txt");
+    ifstream myfile (fileName);
     ofstream outputFile;
     outputFile.open("LISAFILE.txt");
     outputFile<<">>  Source Program statements with value of LC indicated\n"<<endl;
@@ -62,22 +69,21 @@ int main()
             else
 
             {
+
                 label=parser.getLabel();
                 operation=parser.getOperation();
                 operand=parser.getOperand();
-//                cout<<label<<"\t"<<operation<<"\t"<<operand<<endl;
-                validator->validateSyntax(label,operation,operand);
 
+                validator->validateSyntax(label,operation,operand);
 
                 label= completeString(label,9);
                 operation=completeString(operation,8);
 
-                cout<<validator->getAddress()<<endl;
                 address=completeAddress(validator->getAddress());
-                outputFile <<address<<label<<operation<<operand<<endl;
-                if(!validator->isValid())
+                outputFile <<address+" "<<label<<operation<<operand<<endl;
+                if(validator->isValid())
                 {
-                    outputFile<<"\t\t"<<validator->getError()<<endl;
+                    outputFile<<validator->getError()<<endl;
                 }
 
             }
@@ -86,9 +92,31 @@ int main()
         }
         outputFile<<"\n>>    e n d    o f   p a s s   1\n"<<endl;
         outputFile<<">>   *****************************************************"<<endl;
+        HashTable <string,string>symTab=validator->getSympolTable();
+        symTab.iterator();
+
         outputFile<<">>    s y m b o l     t a b l e   (values in decimal)\n"<<endl;
         outputFile<<"        name         value"<<endl;
         outputFile<<"        ------------------"<<endl;
+
+        while(symTab.hasNext())
+        {
+
+            Entry<string,string>* element = symTab.next();
+            string tmp = element->getValue();
+            char buff[1024];
+            strcpy(buff, tmp.c_str());
+            long value = strtol(buff, NULL, 16);
+
+
+            outputFile<<"        "<<completeString(element->getKey(),13)<<value<<endl;
+
+        }
+
+
+
+
+
 
 
 
@@ -108,7 +136,7 @@ int main()
 
 
 
-    return 0;
 }
 
 
+};
