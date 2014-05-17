@@ -1,10 +1,13 @@
 #include "operationInfo.h"
 
+//using namespace std;
 
 operationInfo::operationInfo()
 {
     //ctor
     //temp;
+    operationName = "s";
+    cout<<"fuck"<<endl;
 }
 
 

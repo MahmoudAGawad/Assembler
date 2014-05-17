@@ -5,20 +5,32 @@
  *      Author: mostafa22
  */
 
-//#include "operationInfo.h"
 
 #include "Validator.h"
-#include "operationInfo.h"
-
+#include <iostream>
+#include <strings.h>
+#include <stdlib.h>
+#include <string>
+#include "operationInfo.cpp"
+using namespace std;
 
 Validator :: Validator(){
   // empty constructor
+  //string name , bool need , int howMany , bool dir
+  operationInfo* firOp = new operationInfo("START" , false , 1 , true);
+  operationInfo* secOp = new operationInfo("LDA" , false , 1 , false);
+  operationInfo* thiOp = new operationInfo("ADD" , false , 1 , false);
+  operationInfo* forOp = new operationInfo("ADDR" , true , 2 , false);
+  operationTable.insert("START" , firOp);
+  operationTable.insert("LDA" , secOp);
+  operationTable.insert("ADD" , thiOp);
+  operationTable.insert("ADDR" , forOp);
+
+
 }
 
-Validator :: Validator(HashTable<int , int> opTable){
+Validator :: Validator(HashTable<int , operationInfo*> opTable){
 
-    operationInfo x ;
-//operationTable = opTable;
 
 }
 
@@ -166,7 +178,7 @@ bool Validator :: checkDirectiveOpernadSyntax(string operation , string operand)
 
     }
 
-    if(operation == "START"){
+    else if(operation == "START"){
 
         // if the operation is start then the operand must be hexa
 
@@ -291,10 +303,10 @@ void Validator :: checkSyntax(string label , string operation , string operand){
 
         // if the operation is corect
 
-        //operationInfo* t = new operationInfo();
-        int howManyoperand = 0;
-        bool registerInfo = 0;
-        bool dirctive = 0;
+        operationInfo* opTemp = operationTable.get(operation);
+        int howManyoperand = opTemp->howManyOperand;
+        bool registerInfo = opTemp->registeronly;
+        bool dirctive = opTemp->directive;
 
         if( dirctive ){
                 // check if the operand is correct

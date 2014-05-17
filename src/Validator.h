@@ -13,12 +13,13 @@
 #include <strings.h>
 #include <stdlib.h>
 #include <string>
+#include "operationInfo.h"
 
 using namespace std;
 class Validator{
 
 public :
-    Validator( HashTable<int , int> opTable );
+    Validator( HashTable<int , operationInfo*> opTable );
 
     Validator();  //  empty costructor
     ~Validator(); // destructor
@@ -33,10 +34,11 @@ public :
     string getError();
 
 
-protected :
-    HashTable<string , int> sympolTable;    // the table containing all the sympols
-    HashTable<string , int> operationTable; // the table containing all the informathion about the operation
+
+    HashTable<string , operationInfo*> sympolTable;    // the table containing all the sympols
+    HashTable<string , operationInfo*> operationTable; // the table containing all the informathion about the operation
     string error ;                          // the error message
+    bool notOk = false;
 private:
 
 
