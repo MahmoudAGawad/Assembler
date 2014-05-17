@@ -8,6 +8,7 @@ operationInfo::operationInfo()
     this->format = "";
 	this->opCode = "";
 	this->regist = false;
+	this->directive = true;
 }
 
 
@@ -18,10 +19,23 @@ operationInfo:: operationInfo(int operands, string format,
     this->format = format;
     this->opCode = opCode;
     this->regist = (register_=="FALSE") ? false : true;
+    this->directive = false;
 }
 
 
 operationInfo::~operationInfo()
 {
     //dtor
+}
+
+int operationInfo::getOperands(){
+	return operands;
+}
+
+bool operationInfo::isDirective(){
+	return directive;
+}
+
+bool operationInfo::isRegisiterOnly(){
+	return regist;
 }

@@ -7,7 +7,7 @@
 #include <strings.h>
 #include <fstream>
 #include <iostream>
-#include "HashTable.cpp";
+#include "Validator.h"
 #include "operationinfo.h"
 
 using namespace std;

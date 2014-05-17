@@ -8,7 +8,7 @@
 
 #include <iostream>
 #include <sstream>
-#include "HashTable.cpp"
+#include "Validator.h"
 #include "Reading.cpp"
 using namespace std;
 

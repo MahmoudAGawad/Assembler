@@ -12,6 +12,10 @@ class operationInfo
         operationInfo();
         operationInfo(int operands, string format, string opCode, string register_);
         ~operationInfo();
+        int getOperands();
+        bool isRegisiterOnly();
+        bool isDirective();
+
 
 
     protected :
@@ -19,7 +23,7 @@ class operationInfo
         int operands;
         string format;
         string opCode;
-        bool regist;
+        bool regist, directive;
 
 };
 
