@@ -58,7 +58,6 @@ void Parser::connectWords(vector<string> splittedWords){
 // not comment nor rsub
 
   if(checkComment(splittedWords)){
-
    isCommentVar=true;
   }
 
@@ -82,6 +81,7 @@ void Parser::connectWords(vector<string> splittedWords){
      return;
 }
 else{
+
         if(splittedWords.size()>5){isInValidVar=true;}
         else if(splittedWords.size()>=2){
 
@@ -217,6 +217,7 @@ bool Parser::isEnd(vector<string> splittedWords){
 
      if(splittedWords.size()==1){
         if(splittedWords.at(0)=="END"||splittedWords.at(0)=="end"){
+               operation=splittedWords.at(0);
             return true;
         }
     }
