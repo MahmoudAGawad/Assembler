@@ -82,11 +82,6 @@ public:
 		table = new Entry<K,V>[_SIZE];
 	}
 
-	~HashTable(){
-		delete [] table;
-		table = 0;
-		cout << "Destructor!!\n";
-	}
 
 	bool insert(K key, V value);
 	bool _delete(K key);
@@ -111,6 +106,11 @@ public:
 		return cursor<_SIZE;
 	}
 
+	void kill(){
+		delete [] table;
+		table = 0;
+		cout << "Destructor!!\n";
+	}
 private:
 	Entry<K,V> *table;
 	int cursor;

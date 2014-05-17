@@ -13,14 +13,9 @@
 #include "Control.cpp"
 int main(int argc, char* argv[]){
 
-	if(argc!=2){
-		fprintf(stderr, "Error: Invalid arguments.\n");
-		return -1;
-	}
 
-	printf("The assembly file is: %s\n", argv[1]);
 	Control controler;
-	controler.control(argv[1]);
+	controler.control("src.txt");
 	return 0;
 
 }

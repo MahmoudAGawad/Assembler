@@ -460,6 +460,8 @@ bool Validator :: checkDirectiveOpernadSyntax(string operation , string operand)
         else format = sizeOfArray;
         return true;
     }
+
+    return false;
 }
 
 bool Validator :: split(string operand , string reg[]){

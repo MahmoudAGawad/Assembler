@@ -128,8 +128,8 @@ void control(char* fileName)
         outputFile.close();
 
 
-
-
+        opTable->kill();
+        read.kill();
     }
 
     else cout << "Unable to open file";

@@ -1,0 +1,50 @@
+>>  Source Program statements with value of LC indicated
+
+      .Read a string from an input device and print the string to an output device
+      .2345678901234567890
+001000 PROB2    START   1000
+      .
+001000 INLOOP   TD      INDEV
+001003          JEQ     INLOOP
+001006          RD      INDEV
+001009          COMP    EOF
+00100C          JEQ     EXIT
+00100F          JSUB    TOUPPER
+001012          JSUB    WRITECH
+001015          J       INLOOP
+001018 EXIT     J       *
+      .
+      .  Subroutine for converting to uppuer case  
+      .
+00101B TOUPPER  SUB     #32
+00101E          RSUB    
+      .
+      .  Subroutine for printing a character
+      .
+001021 WRITECH  TD      OUTDEV
+001024          JEQ     WRITECH
+001027          WD      OUTDEV
+00102A          RSUB    
+      .
+00102D INDEV    BYTE    X'F3'
+00102E EOF      BYTE    X'FFFF04'
+001031 OUTDEV   BYTE    X'05'
+001032          END     
+
+>>    e n d    o f   p a s s   1
+
+>>   *****************************************************
+>>    s y m b o l     t a b l e   (values in decimal)
+
+        name         value
+        ------------------
+        EOF          4142
+        TOUPPER      4123
+        INLOOP       4096
+        PROB2        4096
+        WRITECH      4129
+        INDEV        4141
+        OUTDEV       4145
+        EXIT         4120
+
+>>   *****************************************************

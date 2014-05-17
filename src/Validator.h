@@ -37,6 +37,7 @@ protected:
     int validInt(string num); // to check if the num is correct integer
     bool split(string operand , string reg[]);
     string intToHexa(int num);
+    void kill();
 
     bool notOk ;
     int startAddress ;

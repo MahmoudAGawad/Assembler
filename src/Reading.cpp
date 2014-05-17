@@ -13,7 +13,7 @@ using namespace std;
 class Reading{
 public:
 
-	~Reading(){
+	void kill(){
 		delete opTable;
 	}
 
@@ -33,10 +33,10 @@ public:
 		string _operator, format, opCode, registerBoolean;
 		int numberOfOperand;
 		while(file >> _operator >> numberOfOperand >> format >> opCode >> registerBoolean){
-			cout << _operator << " " << numberOfOperand << " " <<format<<" "<<opCode <<" " << registerBoolean<<endl;
+			//cout << _operator << " " << numberOfOperand << " " <<format<<" "<<opCode <<" " << registerBoolean<<endl;
 			opTable->insert(_operator, operationInfo(numberOfOperand, format, opCode, registerBoolean));
 		}
-		cout << "FiNISH\n";
+		cout << "Loading OpTable is Finished\n";
 		return opTable;
 	}
 
