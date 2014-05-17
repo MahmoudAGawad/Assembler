@@ -8,8 +8,7 @@
 
 #include <iostream>
 #include <sstream>
-#include "Validator.h"
-#include "Reading.cpp"
+#include "includes.h"
 using namespace std;
 
 int main(){

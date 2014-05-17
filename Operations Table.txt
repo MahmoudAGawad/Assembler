@@ -1,4 +1,3 @@
-START  END BYTE WORD  RESB  RESW  
 ADD    1   3/4   18      FALSE 
 ADDF   1   3/4   58      FALSE
 ADDR   2   2     90      TRUE

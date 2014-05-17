@@ -22,12 +22,16 @@ public:
 	HashTable<string,operationInfo>* read(){ // file name + extension
 		ifstream file("Operations Table.txt");
 		opTable = new HashTable<string,operationInfo>;
-		string firstLine;
-		int i=6;
-		while(i--){
-			file>>firstLine;
-			opTable->insert(firstLine, operationInfo());
-		}
+
+		// Directive
+		opTable->insert("START", operationInfo());
+		opTable->insert("END", operationInfo());
+		opTable->insert("WORD", operationInfo());
+		opTable->insert("RESW", operationInfo());
+		opTable->insert("RESB", operationInfo());
+		opTable->insert("BYTE", operationInfo());
+		// end directive
+
 		string _operator, format, opCode, registerBoolean;
 		int numberOfOperand;
 		while(file >> _operator >> numberOfOperand >> format >> opCode >> registerBoolean){
