@@ -17,26 +17,16 @@ using namespace std;
 Validator :: Validator() {
     // empty constructor
     //string name , bool need , int howMany , bool dir
-//    operationInfo* firOp = new operationInfo("START" , false , 1 , true);
-//    operationInfo* secOp = new operationInfo("RESW"   , false , 1 , true);
-//    operationInfo* thiOp = new operationInfo("ADD"   , false , 1 , false);
-//    operationInfo* forOp = new operationInfo("ADDR"  , true  , 2 , false);
-//    operationInfo* A = new operationInfo("A"  , true  , 2 , false);
-//    operationInfo* X = new operationInfo("X"  , true  , 2 , false);
-//    sympolTable.insert("g" , "34");
-//    operationTable.insert("START" , firOp);
-//    operationTable.insert("RESW" , secOp);
-//    operationTable.insert("ADD" , thiOp);
-//    operationTable.insert("ADDR" , forOp);
-//    operationTable.insert("A" , A);
-//    operationTable.insert("X" , X);
+    notOk = false;
+    error = "";
 
 
 
 }
 
-Validator :: Validator(HashTable<int , operationInfo*> opTable) {
+Validator :: Validator(HashTable<string , operationInfo> opTable) {
 
+    operationTable = opTable;
 
 }
 
@@ -50,6 +40,14 @@ string Validator :: getAddress(){
         prevAddress = 0;
         startAddress += format;
         return "0000";
+    }
+    else if(startAddress > maxSpace){
+        if(prevAddress == -1){
+            prevAddress = 0;
+        }
+        curAddress = intToHexa(prevAddress);
+        return curAddress;
+
     }
     if(notOk){
        // return the address and don't add any thing
@@ -92,6 +90,7 @@ string Validator :: intToHexa(int num){
 bool Validator :: checkOpernadSyntax(string operand){
 
         // if the operation contains label
+        if(operand == "*") return true;
     if (operand != "") {
 
 
@@ -148,7 +147,7 @@ bool Validator :: checkLabelSyntax(string label) {
     // if the operation contains label
     if (label != "") {
 
-        if( sympolTable.containsKey(label)) {
+        if( sympolTable.containsKey(label) || operationTable.containsKey(label)) {
             // if this label was defined before it can not be redefined
             error = "this label already exist ";
             notOk = true;
@@ -257,7 +256,7 @@ int Validator :: validInt(string num) {
 
     for( int i = len - 1  ; i >= 0 ; i--) {
 
-        int pow = (10 , index);
+        int pow2 = pow(10 , index);
         int number = 0;
 
         if( (num[i] - '0') >= 0  && (num[i] - '9') <= 0) {
@@ -273,7 +272,7 @@ int Validator :: validInt(string num) {
         // not valid
         else return -10000;
 
-        value +=(number * pow);
+        value +=(number * pow2);
 
         index++;
 
@@ -295,6 +294,11 @@ bool Validator :: checkDirectiveOpernadSyntax(string operation , string operand)
     }
 
     else if(operation == "START") {
+        if(startAddress != -1){
+            notOk = true;
+            error = "2 start";
+            return false;
+        }
         format = 0;
         // if the operation is start then the operand must be hexa
         if(operand == ""){
@@ -321,12 +325,13 @@ bool Validator :: checkDirectiveOpernadSyntax(string operation , string operand)
         // if the operation is word then the operand must be integer
 
         int value = validInt(operand);
-
+        format  = 0;
         if( value == -10000) {
                 error = "not valid decimal number !";
                 notOk = true;
             return false;
         }
+        format = 3 ;
         return true;
 
     }
@@ -372,6 +377,13 @@ bool Validator :: checkDirectiveOpernadSyntax(string operation , string operand)
                         notOk = true;
                     return false;
                 }
+                if(tempNum.length() % 2 != 0 ){
+                    notOk = true;
+                    error = "odd number of digit";
+                    return false;
+                }
+
+                format = tempNum.length() / 2;
                 return true;
             } else {
                 error ="not valid operand !";
@@ -407,6 +419,7 @@ bool Validator :: checkDirectiveOpernadSyntax(string operation , string operand)
             }
 
             if(!someThingWrong){
+                    format = tempNum.length();
                 return true;
 
             }
@@ -436,6 +449,8 @@ bool Validator :: checkDirectiveOpernadSyntax(string operation , string operand)
             error = "not valid decimal number !";
             return false;
         }
+        if(operation == "RESW")format = 3* sizeOfArray;
+        else format = sizeOfArray;
         return true;
     }
 }
@@ -509,10 +524,10 @@ void Validator :: checkSyntax(string label , string operation , string operand) 
 
         // if the operation is corect
 
-        operationInfo* opTemp = operationTable.get(operation);
-        int howManyoperand = opTemp->howManyOperand;
-        bool registerInfo = opTemp->registeronly;
-        bool dirctive = opTemp->directive;
+        operationInfo opTemp = operationTable.get(operation);
+        int howManyoperand = opTemp.howManyOperand;
+        bool registerInfo = opTemp.registeronly;
+        bool dirctive = opTemp.directive;
         format = 3;
         if( dirctive ) {
             // check if the operand is correct
@@ -693,8 +708,31 @@ void Validator :: checkSyntax(string label , string operation , string operand) 
     error = "invalid operation !";
 }
 
+void Validator :: validateSyntax(string label , string operation , string operand){
+    checkSyntax( label ,  operation ,  operand);
+    if(label != ""){
+
+       if(notOk){
+        string add = intToHexa(prevAddress);
+        sympolTable.insert(label , add);
+
+       }
+       else{
+            string add = intToHexa(startAddress);
+        sympolTable.insert(label , add);
+       }
+
+    }
+}
 
 
+bool Validator :: isValid(){
 
+    return notOk;
+}
 
+string Validator :: getError(){
 
+    return error ;
+
+}

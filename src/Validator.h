@@ -20,26 +20,34 @@ using namespace std;
 class Validator{
 
 public :
-    Validator( HashTable<int , operationInfo*> opTable );
+    Validator( HashTable<string , operationInfo> opTable );
 
     Validator();  //  empty costructor
     ~Validator(); // destructor
 
+    void validateSyntax(string label , string operation , string operand);
+    bool isValid();
+    string getError();
+protected:
+
     void checkSyntax(string label , string operation , string operand); // check the syntax of the operation
+
     bool checkLabelSyntax(string label); // to check if the label is correct
     bool checkOpernadSyntax(string operand);
     bool checkDirectiveOpernadSyntax(string operation  , string operand);
     int validHexa(string num); // to check if the num is correct hexa if true return the value ,else return -1
     int validInt(string num); // to check if the num is correct integer
     bool split(string operand , string reg[]);
-    bool checkValid();
-    string getError();
+    string getAddress();
+    string intToHexa(int num);
+
     bool notOk = false;
-
-
-
+    int startAddress = -1;
+    int prevAddress = -1;
+    int format = 0;
+    const int maxSpace = 1048576;
     HashTable<string , string> sympolTable;    // the table containing all the sympols
-    HashTable<string , operationInfo*> operationTable; // the table containing all the informathion about the operation
+    HashTable<string , operationInfo> operationTable; // the table containing all the informathion about the operation
     string error ;                          // the error message
 private:
 
