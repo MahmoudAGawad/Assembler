@@ -7,9 +7,7 @@
 #include <strings.h>
 #include <fstream>
 #include <iostream>
-#include "Validator.h"
-#include "operationinfo.h"
-
+#include "includes.h"
 using namespace std;
 
 class Reading{

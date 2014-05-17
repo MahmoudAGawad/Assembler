@@ -11,6 +11,7 @@
 #include <strings.h>
 #include <stdlib.h>
 #include <string>
+#include <math.h>
 using namespace std;
 
 Validator :: Validator() {

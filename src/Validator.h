@@ -9,7 +9,8 @@
 #define VALIDATOR_H
 
 #include "includes.h"
-
+#include "operationInfo.h"
+#include "HashTable.cpp"
 
 using namespace std;
 class Validator{
