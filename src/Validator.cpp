@@ -18,9 +18,9 @@ Validator :: Validator() {
     // empty constructor
     //string name , bool need , int howMany , bool dir
     operationInfo* firOp = new operationInfo("START" , false , 1 , true);
-    operationInfo* secOp = new operationInfo("LDA" , false , 1 , false);
-    operationInfo* thiOp = new operationInfo("ADD" , false , 1 , false);
-    operationInfo* forOp = new operationInfo("ADDR" , true , 2 , false);
+    operationInfo* secOp = new operationInfo("LDA"   , false , 1 , false);
+    operationInfo* thiOp = new operationInfo("ADD"   , false , 1 , false);
+    operationInfo* forOp = new operationInfo("ADDR"  , true  , 2 , false);
 
     operationTable.insert("START" , firOp);
     operationTable.insert("LDA" , secOp);
@@ -38,18 +38,18 @@ Validator :: Validator(HashTable<int , operationInfo*> opTable) {
 bool Validator :: checkOpernadSyntax(string operand){
 
         // if the operation contains label
-    if (label != "") {
+    if (operand != "") {
 
 
         // check if name of the label is correct
 
-        int len = label.length();
+        int len = operand.length();
         bool findchar = false;
         bool invalidchar = false;
         // the first char can't be number , and the label must contain chars
         for( int i = 0 ; i < len ; i++) {
 
-            if( (label[i] - '0') >= 0 && (label[i] - '9') <= 0) {
+            if( (operand[i] - '0') >= 0 && (operand[i] - '9') <= 0) {
 
                 if( !i ) {
                     error = "the label name can't start with number";
@@ -60,8 +60,8 @@ bool Validator :: checkOpernadSyntax(string operand){
             }
 
             // valid chars
-            else if(((label[i] -'a') >= 0 && (label[i] - 'z') <= 0) ||
-                    ((label[i] -'A') >= 0 && (label[i] - 'Z') <= 0) ) {
+            else if(((operand[i] -'a') >= 0 && (operand[i] - 'z') <= 0) ||
+                    ((operand[i] -'A') >= 0 && (operand[i] - 'Z') <= 0) ) {
                 findchar = true;
 
             } else {
@@ -421,6 +421,7 @@ bool Validator :: split(string operand , string reg[]){
 void Validator :: checkSyntax(string label , string operation , string operand) {
 
 
+
     if(!checkLabelSyntax(label)) {
         return;
     }
@@ -538,19 +539,49 @@ void Validator :: checkSyntax(string label , string operation , string operand) 
                             error = "invalid index mode !";
                             return;
                         }
-                        else if( reg[0] == "#" || reg[0] ="@" ){
+                        else if( reg[0] == "#" || reg[0] =="@" ){
 
                             notOk = true;
                             error = "invalid index mode !";
                             return;
                         }
-                        else if(checkOpernadSyntax){
-
+                        else if(!checkOpernadSyntax(reg[0])){
+                                notOk = true;
+                                error = "invalid operand name !";
+                                return;
 
 
                         }
+                        else{
+                                // correct instrucion
+                            return;
+                        }
 
 
+                    }
+
+                    else{
+                        // the reg[0] can start with # or @
+
+                        if(reg[0][0] == '#' || reg[0][0] == '@'){
+
+                            // one of the index modes
+                            string temp = "";
+                            string tempreg = reg[0];
+                            for(int i = 1 ; i < tempreg.length() ; i++){
+
+                                temp += tempreg[i];
+
+                            }
+                            if(! checkOpernadSyntax(temp)){
+                                return;
+                            }
+                            else return;
+
+                        }
+                        else{
+                            checkOpernadSyntax(reg[0]);
+                        }
                     }
 
                 }
