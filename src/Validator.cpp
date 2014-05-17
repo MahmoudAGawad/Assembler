@@ -212,7 +212,7 @@ int Validator :: validHexa(string num) {
     for( int i = len - 1  ; i >= 0 ; i--) {
 
         int pow2 = pow(16 , index);
-        cout<<pow2<<endl;
+//        cout<<pow2<<endl;
         int number = 0;
 
         if( (num[i] - '0') >= 0  && (num[i] - '9') <= 0) {
@@ -458,7 +458,7 @@ bool Validator :: checkDirectiveOpernadSyntax(string operation , string operand)
 bool Validator :: split(string operand , string reg[]){
 
     // split the operand
-    cout <<operand <<endl;
+//    cout <<operand <<endl;
     int len = operand.length();
      int comma = 0;
      string load = "";
@@ -481,7 +481,7 @@ bool Validator :: split(string operand , string reg[]){
 
         else{
             load += operand[i];
-            cout<<"load : "<<load<<endl;
+//            cout<<"load : "<<load<<endl;
         }
      }
 
@@ -520,9 +520,13 @@ void Validator :: checkSyntax(string label , string operation , string operand) 
         formatFour = true;
         operation = tempOperation;
     }
+//            cout<<endl;
+//            cout<<operationTable.containsKey(operation)<<" 8 ";
+//                cout <<" " <<operation;
 
     if( operationTable.containsKey(operation)) {
 
+          //      cout <<"///"<<operation<<endl;
         // if the operation is corect
 
         operationInfo opTemp = operationTable.get(operation);
@@ -606,7 +610,9 @@ void Validator :: checkSyntax(string label , string operation , string operand) 
                         return;
                     }
                 }
-
+                else{
+                    return;
+                }
 
 
 
@@ -645,15 +651,15 @@ void Validator :: checkSyntax(string label , string operation , string operand) 
                     if(!split(operand , reg)){
                         return;
                     }
-                    cout<<"(0)"<<reg[0]<<"(1)"<<reg[1]<<endl;
+//                    cout<<"(0)"<<reg[0]<<"(1)"<<reg[1]<<endl;
                     // if their wax a comma , then the reg[1] must contain (X, index mode) and
                     // reg[0] must not start with (#,@)
 
                     if( reg[1] != ""){
-                        cout<<"yes here"<<endl;
+//                        cout<<"yes here"<<endl;
 
                         if(reg[1] != "X"){
-                            cout<<"yes here X"<<endl;
+//                            cout<<"yes here X"<<endl;
 
                             notOk = true;
                             error = "invalid index mode !";
@@ -682,7 +688,7 @@ void Validator :: checkSyntax(string label , string operation , string operand) 
 
                     else{
                         // the reg[0] can start with # or @
-                        cout<<"yes from else"<<endl;
+//                        cout<<"yes from else"<<endl;
                         if(reg[0][0] == '#' || reg[0][0] == '@'){
 
                             // one of the index modes
@@ -700,7 +706,7 @@ void Validator :: checkSyntax(string label , string operation , string operand) 
 
                         }
                         else{
-                                cout<<"yes from else"<<endl;
+//                                cout<<"yes from else"<<endl;
 
                             checkOpernadSyntax(reg[0]);
                             return;
