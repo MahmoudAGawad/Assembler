@@ -1,0 +1,30 @@
+.Read a string from an input device and print the string to an output device
+.2345678901234567890
+PROB2    START   1000
+.
+INLOOP   TD      INDEV
+         JEQ     INLOOP
+         RD      INDEV
+         COMP    EOF
+         JEQ     EXIT
+         JSUB    TOUPPER
+         JSUB    WRITECH
+         J       INLOOP
+EXIT     J       *
+.
+.  Subroutine for converting to uppuer case  
+.
+TOUPPER  SUB     #32
+         RSUB
+.
+.  Subroutine for printing a character
+.
+WRITECH  TD      OUTDEV
+         JEQ     WRITECH
+         WD      OUTDEV
+         RSUB
+.
+INDEV    BYTE    X'F3'
+EOF      BYTE    X'FFFF04'
+OUTDEV   BYTE    X'05'
+         END
