@@ -38,11 +38,11 @@ protected:
     bool split(string operand , string reg[]);
     string intToHexa(int num);
 
-    bool notOk = false;
-    int startAddress = -1;
-    int prevAddress = -1;
-    int format = 0;
-    const int maxSpace = 1048576;
+    bool notOk ;
+    int startAddress ;
+    int prevAddress ;
+    int format ;
+    static const int maxSpace = 1048576 ;
     HashTable<string , string> sympolTable;    // the table containing all the sympols
     HashTable<string , operationInfo> operationTable; // the table containing all the informathion about the operation
     string error ;                          // the error message

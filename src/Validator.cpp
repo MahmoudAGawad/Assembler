@@ -17,8 +17,11 @@ using namespace std;
 Validator :: Validator() {
     // empty constructor
     //string name , bool need , int howMany , bool dir
-    notOk = false;
-    error = "";
+     notOk = false;
+     startAddress = -1;
+     prevAddress = -1;
+     format = 0;
+
 
 
 
@@ -27,6 +30,10 @@ Validator :: Validator() {
 Validator :: Validator(HashTable<string , operationInfo> opTable) {
 
     operationTable = opTable;
+     notOk = false;
+     startAddress = -1;
+     prevAddress = -1;
+     format = 0;
 
 }
 
