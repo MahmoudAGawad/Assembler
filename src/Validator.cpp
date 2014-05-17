@@ -11,7 +11,6 @@
 #include <strings.h>
 #include <stdlib.h>
 #include <string>
-#include "operationInfo.h"
 using namespace std;
 
 Validator :: Validator() {

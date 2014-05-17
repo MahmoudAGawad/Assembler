@@ -8,13 +8,8 @@
 #ifndef VALIDATOR_H
 #define VALIDATOR_H
 
-#include "HashTable.cpp"
-#include <iostream>
-#include <strings.h>
-#include <stdlib.h>
-#include <string>
-#include <math.h>
-#include "operationInfo.h"
+#include "includes.h"
+
 
 using namespace std;
 class Validator{
