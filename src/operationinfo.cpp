@@ -39,3 +39,11 @@ bool operationInfo::isDirective(){
 bool operationInfo::isRegisiterOnly(){
 	return regist;
 }
+
+string operationInfo::getFormat(){
+	return format;
+}
+
+string operationInfo::getOpCode(){
+	return opCode;
+}

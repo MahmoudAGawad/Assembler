@@ -15,6 +15,8 @@ class operationInfo
         int getOperands();
         bool isRegisiterOnly();
         bool isDirective();
+        string getFormat();
+        string getOpCode();
 
 
 
