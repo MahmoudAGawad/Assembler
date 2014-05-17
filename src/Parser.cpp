@@ -66,36 +66,28 @@ void Parser::connectWords(vector<string> splittedWords){
 
         if(splittedWords.size()==1){
     operation=splittedWords.at(0);
-     cout<<"label    "<<label<<endl;
-     cout<<"operation   " <<operation<<endl;
-     cout<<"operand    "<<operand<<endl;
      }
 
     if(splittedWords.size()==2){
         operation=splittedWords.at(1);
         label=splittedWords.at(0);
-     cout<<"label    "<<label<<endl;
-     cout<<"operation   " <<operation<<endl;
-     cout<<"operand    "<<operand<<endl;
-
-    }
+       }
 
 
  }
-
+ else if(isEnd(splittedWords)){
+    return ;
+  }
+ else if (isStart(splittedWords)){
+     return;
+}
 else{
-
         if(splittedWords.size()>5){isInValidVar=true;}
         else if(splittedWords.size()>=2){
 
   connectOperand(splittedWords);
 
-     cout<<"label    "<<label<<endl;
-     cout<<"operation   " <<operation<<endl;
-     cout<<"operand    "<<operand<<endl;
-
-
-             }
+            }
     else{
         isInValidVar=true;
     }
@@ -159,7 +151,7 @@ void Parser::connectOperand(vector<string> splittedWords){
      }
 
 
-    cout<<"there is a comma "<<endl;
+   // cout<<"there is a comma "<<endl;
 
       }
 else{
@@ -203,12 +195,91 @@ bool Parser::isRsub(vector<string> splittedWords){
         if(splittedWords.at(1)=="RSUB"||splittedWords.at(1)=="rsub"){
             return true;
         }
+
+        if(splittedWords.at(0)=="RSUB"||splittedWords.at(0)=="rsub"){
+                isInValidVar=true;
+        }
+
     }
 
   if(splittedWords.size()==3){
 
     if(splittedWords.at(1)=="RSUB"||splittedWords.at(1)=="rsub"){
             isInValidVar=true;
+            return true;
+        }
+  }
+
+return false;
+}
+
+bool Parser::isEnd(vector<string> splittedWords){
+
+     if(splittedWords.size()==1){
+        if(splittedWords.at(0)=="END"||splittedWords.at(0)=="end"){
+            return true;
+        }
+    }
+
+    if(splittedWords.size()==2){
+        if(splittedWords.at(1)=="END"||splittedWords.at(1)=="end"){
+            operation=splittedWords.at(1);
+            label=splittedWords.at(0);
+            return true;
+        }
+
+        if(splittedWords.at(0)=="END"||splittedWords.at(0)=="end"){
+            operation=splittedWords.at(0);
+            operand=splittedWords.at(1);
+            return true;
+        }
+
+    }
+
+
+  if(splittedWords.size()==3){      // no label with end
+
+    if(splittedWords.at(1)=="END"||splittedWords.at(1)=="end"){
+            label=splittedWords.at(0);
+             operation=splittedWords.at(1);
+             operand=splittedWords.at(2);
+            return true;
+        }
+  }
+
+return false;
+}
+
+
+bool Parser::isStart(vector<string> splittedWords){
+
+     if(splittedWords.size()==1){
+        if(splittedWords.at(0)=="START"||splittedWords.at(0)=="start"){
+             isInValidVar=true;
+            return true;
+        }
+    }
+
+    if(splittedWords.size()==2){
+        if(splittedWords.at(1)=="START"||splittedWords.at(1)=="start"){
+            operation=splittedWords.at(1);
+            label=splittedWords.at(0);
+            return true;
+        }
+
+        if(splittedWords.at(0)=="START"||splittedWords.at(0)=="start"){
+            operation=splittedWords.at(0);
+            operand=splittedWords.at(1);
+            return true;
+        }
+
+    }
+
+  if(splittedWords.size()==3){      // no label with end
+    if(splittedWords.at(1)=="START"||splittedWords.at(1)=="start"){
+            label=splittedWords.at(0);
+             operation=splittedWords.at(1);
+             operand=splittedWords.at(2);
             return true;
         }
   }

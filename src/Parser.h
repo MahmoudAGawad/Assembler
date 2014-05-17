@@ -33,6 +33,8 @@ bool isComment();
 void connectWords(vector<string> splittedWords);
 void connectOperand(vector<string> splittedWords);
 bool isRsub(vector<string> splittedWords);
+bool isEnd(vector<string> splittedWords);
+bool isStart(vector<string> splittedWords);
 bool checkForComma(vector<string> splittedWords);
 int commaTypeMethod(vector<string> splittedWords);
 
