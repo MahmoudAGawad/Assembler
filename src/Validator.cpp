@@ -506,6 +506,7 @@ void Validator :: checkSyntax(string label , string operation , string operand) 
 
     notOk = false;
     error = "";
+    bool formatFour = false;
     if(!checkLabelSyntax(label)) {
         return;
     }
@@ -516,7 +517,7 @@ void Validator :: checkSyntax(string label , string operation , string operand) 
         for(int i = 1; i < operation.length() ; i++ ){
             tempOperation += operation[i];
         }
-
+        formatFour = true;
         operation = tempOperation;
     }
 
@@ -525,10 +526,24 @@ void Validator :: checkSyntax(string label , string operation , string operand) 
         // if the operation is corect
 
         operationInfo opTemp = operationTable.get(operation);
-        int howManyoperand = opTemp.howManyOperand;
-        bool registerInfo = opTemp.registeronly;
-        bool dirctive = opTemp.directive;
-        format = 3;
+        int howManyoperand = opTemp.getOperands();
+        bool registerInfo = opTemp.isRegisiterOnly();
+        bool dirctive = opTemp.isDirective();
+        string opFormat = opTemp.getFormat();
+        if(opFormat == "1"){
+            format = 1;
+        }
+
+        if(opFormat == "2"){
+            format = 2;
+        }
+        if(opFormat == "3/4"){
+                if(formatFour)
+                  format = 4;
+
+                else format = 3;
+        }
+
         if( dirctive ) {
             // check if the operand is correct
             if(!checkDirectiveOpernadSyntax(operation , operand)){
@@ -730,6 +745,14 @@ bool Validator :: isValid(){
 
     return notOk;
 }
+
+HashTable<string , string> Validator :: getSympolTable(){
+
+return sympolTable;
+
+}
+
+
 
 string Validator :: getError(){
 

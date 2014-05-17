@@ -28,6 +28,8 @@ public :
     void validateSyntax(string label , string operation , string operand);
     bool isValid();
     string getError();
+    string getAddress();
+    HashTable<string , string> getSympolTable();
 protected:
 
     void checkSyntax(string label , string operation , string operand); // check the syntax of the operation
@@ -38,7 +40,6 @@ protected:
     int validHexa(string num); // to check if the num is correct hexa if true return the value ,else return -1
     int validInt(string num); // to check if the num is correct integer
     bool split(string operand , string reg[]);
-    string getAddress();
     string intToHexa(int num);
 
     bool notOk = false;
