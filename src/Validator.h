@@ -13,6 +13,7 @@
 #include <strings.h>
 #include <stdlib.h>
 #include <string>
+#include <math.h>
 #include "operationInfo.h"
 
 using namespace std;
