@@ -17,21 +17,75 @@ using namespace std;
 Validator :: Validator() {
     // empty constructor
     //string name , bool need , int howMany , bool dir
-    operationInfo* firOp = new operationInfo("START" , false , 1 , true);
-    operationInfo* secOp = new operationInfo("LDA"   , false , 1 , false);
-    operationInfo* thiOp = new operationInfo("ADD"   , false , 1 , false);
-    operationInfo* forOp = new operationInfo("ADDR"  , true  , 2 , false);
+//    operationInfo* firOp = new operationInfo("START" , false , 1 , true);
+//    operationInfo* secOp = new operationInfo("RESW"   , false , 1 , true);
+//    operationInfo* thiOp = new operationInfo("ADD"   , false , 1 , false);
+//    operationInfo* forOp = new operationInfo("ADDR"  , true  , 2 , false);
+//    operationInfo* A = new operationInfo("A"  , true  , 2 , false);
+//    operationInfo* X = new operationInfo("X"  , true  , 2 , false);
+//    sympolTable.insert("g" , "34");
+//    operationTable.insert("START" , firOp);
+//    operationTable.insert("RESW" , secOp);
+//    operationTable.insert("ADD" , thiOp);
+//    operationTable.insert("ADDR" , forOp);
+//    operationTable.insert("A" , A);
+//    operationTable.insert("X" , X);
 
-    operationTable.insert("START" , firOp);
-    operationTable.insert("LDA" , secOp);
-    operationTable.insert("ADD" , thiOp);
-    operationTable.insert("ADDR" , forOp);
 
 
 }
 
 Validator :: Validator(HashTable<int , operationInfo*> opTable) {
 
+
+}
+
+string Validator :: getAddress(){
+
+    string curAddress = "";
+    if(startAddress == -1){
+        notOk = true;
+        error = "invalid start of the program";
+        startAddress = 0;
+        prevAddress = 0;
+        startAddress += format;
+        return "0000";
+    }
+    if(notOk){
+       // return the address and don't add any thing
+       curAddress = intToHexa(prevAddress);
+    }
+    else{
+        //return the address and update the address
+        curAddress = intToHexa(startAddress);
+        prevAddress = startAddress;
+       startAddress += format;
+    }
+     return curAddress;
+
+}
+
+
+string Validator :: intToHexa(int num){
+    if(num == 0)return "0000";
+    string result = "";
+    string returnResult = "";
+    while(num > 0){
+
+        int mod = num % 16;
+        num /= 16;
+        if(mod < 10){
+            result +=('0'+mod);
+        }
+        else{
+            result +=('A'+(mod-10));
+        }
+
+    }
+    for(int i = result.length()-1 ; i >=0 ; i--){
+        returnResult += result[i];
+    }
+    return returnResult;
 
 }
 
@@ -46,15 +100,14 @@ bool Validator :: checkOpernadSyntax(string operand){
         int len = operand.length();
         bool findchar = false;
         bool invalidchar = false;
+        bool startWithDigit = false;
         // the first char can't be number , and the label must contain chars
         for( int i = 0 ; i < len ; i++) {
 
             if( (operand[i] - '0') >= 0 && (operand[i] - '9') <= 0) {
 
                 if( !i ) {
-                    error = "the label name can't start with number";
-                    notOk = false;
-                    return false;
+                    startWithDigit = true;
 
                 }
             }
@@ -67,21 +120,23 @@ bool Validator :: checkOpernadSyntax(string operand){
             } else {
                 invalidchar = true;
                 notOk = true;
+                error ="invalid char";
                 return false;
             }
 
 
         }
         // if true then the label contains char
-        if(!findchar){
-                error = "the label name must contain char";
+        if(findchar && startWithDigit){
+                error = "the label name can't start with digit";
                 notOk = true;
+                return false;
         }
         else{
            // sympolTable.insert()
 
         }
-        return findchar;
+        return true;
 
     }
     return true;
@@ -111,7 +166,7 @@ bool Validator :: checkLabelSyntax(string label) {
 
                 if( !i ) {
                     error = "the label name can't start with number";
-                    notOk = false;
+                    notOk = true;
                     return false;
 
                 }
@@ -158,6 +213,7 @@ int Validator :: validHexa(string num) {
     for( int i = len - 1  ; i >= 0 ; i--) {
 
         int pow2 = pow(16 , index);
+        cout<<pow2<<endl;
         int number = 0;
 
         if( (num[i] - '0') >= 0  && (num[i] - '9') <= 0) {
@@ -177,7 +233,7 @@ int Validator :: validHexa(string num) {
         // not valid
         else return -1;
 
-        cout<< number<<" , "<<pow2<<endl;
+       // cout<< number<<" , "<<pow2<<endl;
         value +=(number * pow2);
 
         index++;
@@ -239,17 +295,22 @@ bool Validator :: checkDirectiveOpernadSyntax(string operation , string operand)
     }
 
     else if(operation == "START") {
-
+        format = 0;
         // if the operation is start then the operand must be hexa
-
+        if(operand == ""){
+            notOk = true;
+            error = "you must specify the start";
+            return false;
+        }
         int address = validHexa(operand);
         // if the address is -1 then it is not valid
 
-        if( address == -1) {
+        if( address == -1 || address > maxSpace) {
                 error ="not valid hexa number !";
                 notOk = true;
             return false;
         }
+        startAddress = address;
         return true;
         // the program start is address
     }
@@ -346,7 +407,7 @@ bool Validator :: checkDirectiveOpernadSyntax(string operation , string operand)
             }
 
             if(!someThingWrong){
-                                error = "not valid operand ";
+                return true;
 
             }
             else return false;
@@ -382,7 +443,7 @@ bool Validator :: checkDirectiveOpernadSyntax(string operation , string operand)
 bool Validator :: split(string operand , string reg[]){
 
     // split the operand
-
+    cout <<operand <<endl;
     int len = operand.length();
      int comma = 0;
      string load = "";
@@ -405,6 +466,7 @@ bool Validator :: split(string operand , string reg[]){
 
         else{
             load += operand[i];
+            cout<<"load : "<<load<<endl;
         }
      }
 
@@ -413,7 +475,13 @@ bool Validator :: split(string operand , string reg[]){
 //        error ="unvalid operand !";
 //        return false;
 //     }
-     reg[1]= load;
+    if(comma == 1)
+        {
+            reg[1]= load;
+
+        }
+
+     else reg[0]=load;
      return true;
 
 }
@@ -421,9 +489,20 @@ bool Validator :: split(string operand , string reg[]){
 void Validator :: checkSyntax(string label , string operation , string operand) {
 
 
-
+    notOk = false;
+    error = "";
     if(!checkLabelSyntax(label)) {
         return;
+    }
+
+    if(operation[0] == '+'){
+        // it's format 4
+        string tempOperation = "";
+        for(int i = 1; i < operation.length() ; i++ ){
+            tempOperation += operation[i];
+        }
+
+        operation = tempOperation;
     }
 
     if( operationTable.containsKey(operation)) {
@@ -434,11 +513,12 @@ void Validator :: checkSyntax(string label , string operation , string operand) 
         int howManyoperand = opTemp->howManyOperand;
         bool registerInfo = opTemp->registeronly;
         bool dirctive = opTemp->directive;
-
+        format = 3;
         if( dirctive ) {
             // check if the operand is correct
             if(!checkDirectiveOpernadSyntax(operation , operand)){
                 notOk = true;
+                return;
             }
             else return;
 
@@ -460,13 +540,18 @@ void Validator :: checkSyntax(string label , string operation , string operand) 
                         error = "not valid register !";
                         return;
                     }
+                    else {
+                        return;
+                    }
                 }
                 else{
                         //the instruction is correct
+                    notOk = true;
+                    //error = "invalid"
                     return ;
                 }
 
-                cout<<"needs two register\n";
+              //  cout<<"needs two register\n";
             }
 
 
@@ -514,32 +599,37 @@ void Validator :: checkSyntax(string label , string operation , string operand) 
                         return;
 
                     }
-                    cout<<"needs one register\n";
+                   // cout<<"needs one register\n";
                     return;
 
                 }
                 // if the operation does't need register
                 else {
-                    cout<<"does not need any register\n";
+                   // cout<<"does not need any register\n";
+
                     // then the operand could be name , number or index
                     string reg[2];
                     reg[0]="";
                     reg[1]="";
+
                     if(!split(operand , reg)){
                         return;
                     }
-
+                    cout<<"(0)"<<reg[0]<<"(1)"<<reg[1]<<endl;
                     // if their wax a comma , then the reg[1] must contain (X, index mode) and
                     // reg[0] must not start with (#,@)
 
                     if( reg[1] != ""){
+                        cout<<"yes here"<<endl;
 
                         if(reg[1] != "X"){
+                            cout<<"yes here X"<<endl;
+
                             notOk = true;
                             error = "invalid index mode !";
                             return;
                         }
-                        else if( reg[0] == "#" || reg[0] =="@" ){
+                        else if( reg[0][0] == '#' || reg[0][0] =='@' ){
 
                             notOk = true;
                             error = "invalid index mode !";
@@ -562,7 +652,7 @@ void Validator :: checkSyntax(string label , string operation , string operand) 
 
                     else{
                         // the reg[0] can start with # or @
-
+                        cout<<"yes from else"<<endl;
                         if(reg[0][0] == '#' || reg[0][0] == '@'){
 
                             // one of the index modes
@@ -580,7 +670,10 @@ void Validator :: checkSyntax(string label , string operation , string operand) 
 
                         }
                         else{
+                                cout<<"yes from else"<<endl;
+
                             checkOpernadSyntax(reg[0]);
+                            return;
                         }
                     }
 
