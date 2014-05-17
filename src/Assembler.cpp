@@ -9,10 +9,13 @@
 #include <iostream>
 #include <sstream>
 #include "HashTable.cpp"
+#include "Reading.cpp"
 using namespace std;
 
 int main(){
-
+	Reading read;
+		read.read();
+		return 0;
 	HashTable<string,string> ht;
 		string key="Key#",num,aa,bb,val="Value#";
 		for(int i=0;i<16;i++){

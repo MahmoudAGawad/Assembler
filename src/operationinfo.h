@@ -10,15 +10,16 @@ class operationInfo
 {
     public:
         operationInfo();
-        operationInfo(string name , bool need , int howMany , bool dir);
+        operationInfo(int operands, string format, string opCode, string register_);
         ~operationInfo();
-    bool registeronly;
-    string operationName;
-    int howManyOperand;
-    bool directive;
+
 
     protected :
     private:
+        int operands;
+        string format;
+        string opCode;
+        bool regist;
 
 };
 

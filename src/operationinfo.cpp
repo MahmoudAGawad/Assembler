@@ -4,20 +4,20 @@
 
 operationInfo::operationInfo()
 {
-    //ctor
-    //temp;
-    operationName = "s";
-    cout<<"fuck"<<endl;
+	this->operands = -1;
+    this->format = "";
+	this->opCode = "";
+	this->regist = false;
 }
 
 
-operationInfo:: operationInfo(string name , bool need , int howMany , bool dir)
+operationInfo:: operationInfo(int operands, string format,
+		string opCode, string register_)
 {
-    //ctor
-    operationName = name;
-    registeronly = need;
-    howManyOperand = howMany;
-    directive = dir;
+    this->operands = operands;
+    this->format = format;
+    this->opCode = opCode;
+    this->regist = (register_=="FALSE") ? false : true;
 }
 
 
