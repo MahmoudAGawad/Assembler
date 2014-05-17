@@ -290,7 +290,7 @@ bool Validator :: checkDirectiveOpernadSyntax(string operation , string operand)
     if(operation == "END") {
 
 
-
+        return true;
     }
 
     else if(operation == "START") {
