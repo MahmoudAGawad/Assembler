@@ -31,15 +31,16 @@ public :
     bool checkDirectiveOpernadSyntax(string operation  , string operand);
     int validHexa(string num); // to check if the num is correct hexa if true return the value ,else return -1
     int validInt(string num); // to check if the num is correct integer
+    bool split(string operand , string reg[]);
     bool checkValid();
     string getError();
+    bool notOk = false;
 
 
 
-    HashTable<string , operationInfo*> sympolTable;    // the table containing all the sympols
+    HashTable<string , string> sympolTable;    // the table containing all the sympols
     HashTable<string , operationInfo*> operationTable; // the table containing all the informathion about the operation
     string error ;                          // the error message
-    bool notOk = false;
 private:
 
 
