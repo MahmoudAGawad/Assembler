@@ -15,6 +15,7 @@ int main(int argc, char* argv[]){
 
 
 	Control controler;
+	char* name = "C:/Users/MahmoudSaleh/Desktop/Assembler_Tests/TEST_04";
 	controler.control("src.txt");
 	return 0;
 

@@ -57,7 +57,7 @@ void control(char* fileName)
         {
             line="";
             getline (myfile,line);
-
+            if(line.length() < 3) continue;
             parser.setParsingLine(line);
             parser.parse();
 

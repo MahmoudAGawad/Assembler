@@ -10,11 +10,12 @@ class operationInfo
 {
     public:
         operationInfo();
+        operationInfo(bool registers);
         operationInfo(int operands, string format, string opCode, string register_);
-        ~operationInfo();
         int getOperands();
         bool isRegisiterOnly();
         bool isDirective();
+        bool isRegister();
         string getFormat();
         string getOpCode();
 
@@ -25,7 +26,7 @@ class operationInfo
         int operands;
         string format;
         string opCode;
-        bool regist, directive;
+        bool regist, directive, _register;
 
 };
 

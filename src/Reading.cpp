@@ -30,6 +30,17 @@ public:
 		opTable->insert("BYTE", operationInfo());
 		// end directive
 
+		// Registers
+		opTable->insert("A", operationInfo(true));
+		opTable->insert("S", operationInfo(true));
+		opTable->insert("L", operationInfo(true));
+		opTable->insert("B", operationInfo(true));
+		opTable->insert("X", operationInfo(true));
+		opTable->insert("T", operationInfo(true));
+		opTable->insert("F", operationInfo(true));
+
+		// END Register
+
 		string _operator, format, opCode, registerBoolean;
 		int numberOfOperand;
 		while(file >> _operator >> numberOfOperand >> format >> opCode >> registerBoolean){

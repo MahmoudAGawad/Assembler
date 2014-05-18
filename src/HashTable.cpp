@@ -78,7 +78,7 @@ class HashTable {
 public:
 	HashTable(){
 		entries = cursor = 0;
-		_SIZE=16;
+		_SIZE=128;
 		table = new Entry<K,V>[_SIZE];
 	}
 
