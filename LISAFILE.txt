@@ -3,7 +3,6 @@
       .23456789012345678901234567890
       .MISSING START STATEMENT
 000000 ALPHA    LDT     #10
-invalid start of the program
 000003 BETA     +LDCH   #6
 000007          ADD     @GAMMA
 00000A          J       *

@@ -21,6 +21,7 @@ Validator :: Validator() {
      startAddress = -1;
      prevAddress = -1;
      format = 0;
+     findStart = false;
 
 
 
@@ -34,6 +35,8 @@ Validator :: Validator(HashTable<string , operationInfo> opTable) {
      startAddress = -1;
      prevAddress = -1;
      format = 0;
+    findStart = false;
+
 
 }
 
@@ -41,14 +44,16 @@ string Validator :: getAddress(){
 
     string curAddress = "";
     if(startAddress == -1){
-        notOk = true;
-        error = "invalid start of the program";
+//        notOk = true;
+//        error = "invalid start of the program";
         startAddress = 0;
         prevAddress = 0;
         startAddress += format;
         return "0000";
     }
     else if(startAddress > maxSpace){
+            notOk = true;
+            error = "over flow";
         if(prevAddress == -1){
             prevAddress = 0;
         }
@@ -301,6 +306,7 @@ bool Validator :: checkDirectiveOpernadSyntax(string operation , string operand)
     }
 
     else if(operation == "START") {
+            findStart = true;
         if(startAddress != -1){
             notOk = true;
             error = "2 start";
@@ -309,9 +315,8 @@ bool Validator :: checkDirectiveOpernadSyntax(string operation , string operand)
         format = 0;
         // if the operation is start then the operand must be hexa
         if(operand == ""){
-            notOk = true;
-            error = "you must specify the start";
-            return false;
+            startAddress = 0;
+            return true;
         }
         int address = validHexa(operand);
         // if the address is -1 then it is not valid
@@ -336,6 +341,11 @@ bool Validator :: checkDirectiveOpernadSyntax(string operation , string operand)
         if( value == -10000) {
                 error = "not valid decimal number !";
                 notOk = true;
+            return false;
+        }
+        if(operand.length() >= 7){
+            notOk = true;
+            error = "extra chars at the end of the statment !";
             return false;
         }
         format = 3 ;
@@ -456,6 +466,10 @@ bool Validator :: checkDirectiveOpernadSyntax(string operation , string operand)
             error = "not valid decimal number !";
             return false;
         }
+//        if(operand.length() >= 7){
+//            notO
+//        }
+
         if(operation == "RESW")format = 3* sizeOfArray;
         else format = sizeOfArray;
         return true;
@@ -506,6 +520,7 @@ bool Validator :: split(string operand , string reg[]){
         }
 
      else reg[0]=load;
+     //if(com)
      return true;
 
 }
@@ -531,11 +546,14 @@ void Validator :: checkSyntax(string label , string operation , string operand) 
     }
 //            cout<<endl;
 //            cout<<operationTable.containsKey(operation)<<" 8 ";
-//                cout <<" " <<operation;
+             //   cout <<" " <<operation;
 
     if( operationTable.containsKey(operation)) {
 
-          //      cout <<"///"<<operation<<endl;
+                //cout <<"///"<<operation<<endl;
+                if(operation == "LDT"){
+                    cout<<"yes"<<endl;
+                }
         // if the operation is corect
 
         operationInfo opTemp = operationTable.get(operation);
@@ -543,6 +561,7 @@ void Validator :: checkSyntax(string label , string operation , string operand) 
         bool registerInfo = opTemp.isRegisiterOnly();
         bool dirctive = opTemp.isDirective();
         string opFormat = opTemp.getFormat();
+        //bool isReg = opTemp.isRegister();
         if(opFormat == "1"){
             format = 1;
         }
@@ -556,7 +575,11 @@ void Validator :: checkSyntax(string label , string operation , string operand) 
 
                 else format = 3;
         }
-
+        if(formatFour && (format == 1 || format == 2)){
+            notOk = true;
+            error = "wrong index mode";
+            return;
+        }
         if( dirctive ) {
             // check if the operand is correct
             if(!checkDirectiveOpernadSyntax(operation , operand)){
@@ -578,7 +601,10 @@ void Validator :: checkSyntax(string label , string operation , string operand) 
                 reg[1]="";
                 if(split(operand , reg)){
                     //if reg[0] is not aregister or reg[1]
-                    if(!operationTable.containsKey(reg[0]) || !operationTable.containsKey(reg[1])){
+
+                    operationInfo tempReg1 = operationTable.get(reg[0]);
+                    operationInfo tempReg2 = operationTable.get(reg[1]);
+                    if(!tempReg1.isRegister() || !tempReg2.isRegister() ){
                         notOk = true;
                         error = "not valid register !";
                         return;
@@ -703,12 +729,25 @@ void Validator :: checkSyntax(string label , string operation , string operand) 
                             // one of the index modes
                             string temp = "";
                             string tempreg = reg[0];
+                            bool allDigits = true;
                             for(int i = 1 ; i < tempreg.length() ; i++){
 
                                 temp += tempreg[i];
+                                if((tempreg[i] -'g' >= 0 && tempreg[i]-'z' <=0)||
+                                   (tempreg[i] -'G' >= 0 && tempreg[i]-'Z' <=0)){
+                                    allDigits = false;
+                                }
 
                             }
                             if(! checkOpernadSyntax(temp)){
+                                return;
+                            }
+                            else if(allDigits){
+
+                                if(temp.length() >= 7){
+                                    notOk = true;
+                                    error = "extra chars at the end of the statment";
+                                }
                                 return;
                             }
                             else return;
@@ -739,16 +778,19 @@ void Validator :: checkSyntax(string label , string operation , string operand) 
 }
 
 void Validator :: validateSyntax(string label , string operation , string operand){
+    findStart = false;
     checkSyntax( label ,  operation ,  operand);
     if(label != ""){
 
        if(notOk){
         string add = intToHexa(prevAddress);
+        if(!findStart)
         sympolTable.insert(label , add);
 
        }
        else{
             string add = intToHexa(startAddress);
+            if(!findStart)
         sympolTable.insert(label , add);
        }
 

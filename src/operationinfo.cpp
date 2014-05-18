@@ -1,6 +1,6 @@
 #include "operationInfo.h"
 
-//using namespace std;
+using namespace std;
 
 operationInfo::operationInfo()
 {

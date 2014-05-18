@@ -9,14 +9,23 @@
 
 
 #include <stdio.h>
-#include "includes.h"
+#include <iostream>
 #include "Control.cpp"
+#include "Parser.h"
+#include "Validator.h"
+#include "operationInfo.h"
+
+using namespace std;
+
 int main(int argc, char* argv[]){
 
-
+	if (argc != 2) {
+		fprintf(stderr, "Error: Invalid arguments.\n");
+	    return -1; /* inform the parent process of the error */
+	}
+	printf("The assembly file is: %s\n", argv[1]);
 	Control controler;
-	char* name = "C:/Users/MahmoudSaleh/Desktop/Assembler_Tests/TEST_04";
-	controler.control("src.txt");
+	controler.control(argv[1]);
 	return 0;
 
 }

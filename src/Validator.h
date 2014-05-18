@@ -39,6 +39,7 @@ protected:
     string intToHexa(int num);
     void kill();
 
+    bool findStart;
     bool notOk ;
     int startAddress ;
     int prevAddress ;
