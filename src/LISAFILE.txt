@@ -32,12 +32,12 @@
 
         name         value
         ------------------
+        EOF          4142
         TOUPPER      4123
+        INLOOP       4096
         WRITECH      4129
+        INDEV        4141
         OUTDEV       4145
         EXIT         4120
-        INLOOP       4096
-        EOF          4142
-        INDEV        4141
 
 >>   *****************************************************

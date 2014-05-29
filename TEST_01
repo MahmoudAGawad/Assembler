@@ -1,0 +1,9 @@
+.23456789012345678901234567890
+         START   1000
+ALPHA    LDT     #10
+BETA    +LDCH    #6
+         ADD     @GAMMA
+         J       *
+GAMMA    BYTE    X'01'
+THETA    RESB    2
+         END
