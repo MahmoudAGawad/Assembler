@@ -22,6 +22,7 @@ Validator :: Validator() {
      prevAddress = -1;
      format = 0;
      findStart = false;
+     isEQU = false;
 
 
 
@@ -63,6 +64,10 @@ string Validator :: getAddress(){
     }
     if(notOk){
        // return the address and don't add any thing
+       if(prevAddress == -1){
+        curAddress = intToHexa(startAddress);
+       }
+       else
        curAddress = intToHexa(prevAddress);
     }
     else{
@@ -475,6 +480,24 @@ bool Validator :: checkDirectiveOpernadSyntax(string operation , string operand)
         return true;
     }
 
+    //if it is EQU then the label will be added the symbol table with the given value
+    else if(operation == "EQU"){
+
+
+        // if the operand is valid then put it in the Symbol table
+
+        isEQU = true;
+
+    }
+
+
+    else if(operation == "ORG"){
+
+        prevAddress = -1;
+        //update the address with the value of the operand
+        startAddress = 0;
+
+    }
     return false;
 }
 
@@ -528,7 +551,7 @@ bool Validator :: split(string operand , string reg[]){
 void Validator :: checkSyntax(string label , string operation , string operand) {
 
 
-    notOk = false;
+    notOk = isEQU =false;
     error = "";
     bool formatFour = false;
     if(!checkLabelSyntax(label)) {
@@ -548,12 +571,10 @@ void Validator :: checkSyntax(string label , string operation , string operand) 
 //            cout<<operationTable.containsKey(operation)<<" 8 ";
              //   cout <<" " <<operation;
 
+    operation = transform(operation.begin() , operation.end() , operation.begin() , toupper());
     if( operationTable.containsKey(operation)) {
 
-                //cout <<"///"<<operation<<endl;
-                if(operation == "LDT"){
-                    cout<<"yes"<<endl;
-                }
+
         // if the operation is corect
 
         operationInfo opTemp = operationTable.get(operation);
@@ -788,11 +809,18 @@ void Validator :: validateSyntax(string label , string operation , string operan
         sympolTable.insert(label , add);
 
        }
-       else{
+        else if(isEQU){
+
+            sympolTable.insert(label , operand);
+
+       }
+
+       else if(!notOk){
             string add = intToHexa(startAddress);
             if(!findStart)
         sympolTable.insert(label , add);
        }
+
 
     }
 }

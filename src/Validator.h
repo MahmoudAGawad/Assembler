@@ -32,7 +32,7 @@ protected:
 
     bool checkLabelSyntax(string label); // to check if the label is correct
     bool checkOpernadSyntax(string operand);
-    bool checkDirectiveOpernadSyntax(string operation  , string operand);
+    bool checkDirectiveOpernadSyntax( string operation , string operand);
     int validHexa(string num); // to check if the num is correct hexa if true return the value ,else return -1
     int validInt(string num); // to check if the num is correct integer
     bool split(string operand , string reg[]);
@@ -41,6 +41,7 @@ protected:
 
     bool findStart;
     bool notOk ;
+    bool isEQU ;
     int startAddress ;
     int prevAddress ;
     int format ;
