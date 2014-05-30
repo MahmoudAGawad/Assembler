@@ -14,11 +14,13 @@
 #include "Parser.h"
 #include "Validator.h"
 #include "operationInfo.h"
-
+#include "GeneralTasks.h"
 using namespace std;
 
 int main(int argc, char* argv[]){
 
+	cout << General::intToString(16);
+	return 0;
 	if (argc != 2) {
 		fprintf(stderr, "Error: Invalid arguments.\n");
 	    return -1; /* inform the parent process of the error */
