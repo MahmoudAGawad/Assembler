@@ -12,12 +12,14 @@
 #include <stdlib.h>
 #include <string>
 #include <math.h>
+#include <algorithm>
+#include "GeneralTasks.h"
 using namespace std;
 
 Validator :: Validator() {
     // empty constructor
     //string name , bool need , int howMany , bool dir
-     notOk = false;
+     notOk = LTORG =isAbsolute=isAbsolute==false;
      startAddress = -1;
      prevAddress = -1;
      format = 0;
@@ -32,8 +34,8 @@ Validator :: Validator() {
 Validator :: Validator(HashTable<string , operationInfo> opTable) {
 
     operationTable = opTable;
-     notOk = false;
-     startAddress = -1;
+    notOk = LTORG = isAbsolute =false;
+    startAddress = -1;
      prevAddress = -1;
      format = 0;
     findStart = false;
@@ -62,7 +64,8 @@ string Validator :: getAddress(){
         return curAddress;
 
     }
-    if(notOk){
+
+    else if(notOk){
        // return the address and don't add any thing
        if(prevAddress == -1){
         curAddress = intToHexa(startAddress);
@@ -304,6 +307,7 @@ int Validator :: validInt(string num) {
 
 bool Validator :: checkLiteralSyntax(string operation ,string operand){
 
+
         string word = operand;
         // to store the (C or X or W)
         string type = "";
@@ -313,12 +317,8 @@ bool Validator :: checkLiteralSyntax(string operation ,string operand){
 
         for(int i = 1 ; i < word.length() ; i++){
 
-            if(!findColon1 && !findColon2){
-                if(alreadyFounndColon)wrong = true;
 
-                type += word[i];
-            }
-            else if(!findColon1 && word[i] =='\''){
+             if(!findColon1 && word[i] =='\''){
                 alreadyFounndColon = true;
                 findColon1 = true;
             }
@@ -330,6 +330,13 @@ bool Validator :: checkLiteralSyntax(string operation ,string operand){
                 oper += word[i];
             }
 
+            else if(!findColon1 && !findColon2){
+                if(alreadyFounndColon)wrong = true;
+
+                type += word[i];
+            }
+
+
 
 
         }
@@ -339,6 +346,11 @@ bool Validator :: checkLiteralSyntax(string operation ,string operand){
             error = "not valid literal !";
             return false;
         }
+
+        if(tempLiteralTable.containsKey(operand) && oper !="*" ){
+            return true;
+        }
+
         // if it is empty or W then it should be valid decimal number
         else if(type == "" || type == "w" || type == "W"){
             int value = validInt(oper);
@@ -349,7 +361,7 @@ bool Validator :: checkLiteralSyntax(string operation ,string operand){
                 return false;
             }
             // if it is valid put it in the literal table
-            literalTable.insert(operand , startAddress);
+            tempLiteralTable.insert(operand , 3);
 
 
 
@@ -362,9 +374,10 @@ bool Validator :: checkLiteralSyntax(string operation ,string operand){
                 return false;
             }
 
-            // then it is true
+            // then it is true but the format
+           // string form = General::intToString( oper.length());
 
-            literalTable.insert(operand , startAddress);
+            tempLiteralTable.insert(operand , oper.length());
         }
 
         else if(type == "X" || type == "x" ){
@@ -376,7 +389,8 @@ bool Validator :: checkLiteralSyntax(string operation ,string operand){
                 error = "not valid hexa number !";
                 return false;
             }
-            literalTable.insert(operand , startAddress);
+          //  string form = General::intToString(oper.length() / 2);
+            tempLiteralTable.insert(operand , oper.length() / 2);
 
         }
         else {
@@ -395,6 +409,24 @@ bool Validator :: checkDirectiveOpernadSyntax(string operation , string operand)
 
     if(operation == "END") {
 
+        if(tempLiteralTable.size() != 0){
+        LTORG = true;
+        literalTable.init();
+
+        tempLiteralTable.iterator();
+        while(tempLiteralTable.hasNext()){
+
+            Entry<string , int>*entry = tempLiteralTable.next();
+            string literal = entry->getKey();
+            format = entry->getValue();
+            string add = getAddress();
+            literalTable.insert(literal , add);
+
+
+        }
+        tempLiteralTable.init();
+
+        }
 
         return true;
     }
@@ -571,24 +603,106 @@ bool Validator :: checkDirectiveOpernadSyntax(string operation , string operand)
 
     //if it is EQU then the label will be added the symbol table with the given value
     else if(operation == "EQU"){
-
-
-        // if the operand is valid then put it in the Symbol table
-
+        format = 0;
+        isAbsoluteExpression(operand);
         isEQU = true;
+                return true;
+
 
     }
 
 
     else if(operation == "ORG"){
 
+        isAbsoluteExpression(operand);
+        if(notOk)return false;
         prevAddress = -1;
         //update the address with the value of the operand
+
         startAddress = 0;
+        return true;
+
+    }
+
+
+    else if(operation == "LTORG"){
+        LTORG = true;
+       // literalTable.kill();
+        literalTable.init();
+        tempLiteralTable.iterator();
+        while(tempLiteralTable.hasNext()){
+
+            Entry<string , int>*entry = tempLiteralTable.next();
+            string literal = entry->getKey();
+            format = entry->getValue();
+            string add = getAddress();
+            literalTable.insert(literal , add);
+
+
+        }
+        tempLiteralTable.init();
+        return true;
+
 
     }
     return false;
 }
+
+bool Validator :: isAbsoluteExpression(string operand){
+
+      vector<string> splitExpr = General::parseExpression(operand , startAddress);
+        int numberOfPostive = 0 , numberOfNegative = 0;
+
+
+        // if the operand is valid then put it in the Symbol table
+        for(int i = 0 ; i < splitExpr.size() ;i++){
+
+            string tmp = splitExpr[i];
+
+            if(tmp=="+" || tmp=="-" ||tmp=="*" || tmp=="/"){
+
+                continue;
+
+            }
+            int value = validInt(tmp);
+
+            if(value == -10000 &&!sympolTable.containsKey(tmp)){
+                notOk = true;
+                error = tmp+" was not defined !";
+                return false;
+            }
+            else if(sympolTable.containsKey(tmp)){
+                labelInfo label = sympolTable.get(tmp);
+                if(!label.isAbsolute()&&(i == 0 || splitExpr[i-1] == "+")){
+                    numberOfPostive++;
+                }
+                else if(!label.isAbsolute()&&(splitExpr[i-1] == "-")){
+                    numberOfNegative++;
+                }
+                else if(!label.isAbsolute()&&(splitExpr[i-1] == "/" || splitExpr[i-1] == "*")){
+                    notOk = true;
+                    error = "invalid expression !";
+                    return false;
+                }
+            }
+
+        }
+        // static expression , when every relative part can be paired with another relative part
+        if(numberOfNegative == numberOfPostive){
+            isAbsolute = true;
+        }
+        else if(numberOfPostive == numberOfNegative + 1){
+            isAbsolute = false;
+        }
+        else{
+            isAbsolute = false;
+            notOk = true;
+            error = "invalid expression !";
+            return false;
+        }
+
+}
+
 
 bool Validator :: split(string operand , string reg[]){
 
@@ -640,7 +754,7 @@ bool Validator :: split(string operand , string reg[]){
 void Validator :: checkSyntax(string label , string operation , string operand) {
 
 
-    notOk = isEQU =false;
+    notOk = isEQU = LTORG = false;
     error = "";
     bool formatFour = false;
     if(!checkLabelSyntax(label)) {
@@ -660,7 +774,7 @@ void Validator :: checkSyntax(string label , string operation , string operand) 
 //            cout<<operationTable.containsKey(operation)<<" 8 ";
              //   cout <<" " <<operation;
 
-    operation = transform(operation.begin() , operation.end() , operation.begin() , toupper());
+   transform(operation.begin(), operation.end(), operation.begin(), ::toupper);
     if( operationTable.containsKey(operation)) {
 
 
@@ -692,6 +806,7 @@ void Validator :: checkSyntax(string label , string operation , string operand) 
         }
         if( dirctive ) {
             // check if the operand is correct
+            cout<<operation<<"####"<<endl;
             if(!checkDirectiveOpernadSyntax(operation , operand)){
                 notOk = true;
                 return;
@@ -865,6 +980,8 @@ void Validator :: checkSyntax(string label , string operation , string operand) 
                         }
                         // if it starts with (=) then it is literal
                         else if(reg[0][0] == '='){
+                               checkLiteralSyntax(operation ,reg[0]);
+                            return;
 
 
 
@@ -902,24 +1019,43 @@ void Validator :: validateSyntax(string label , string operation , string operan
 
        if(notOk){
         string add = intToHexa(prevAddress);
-        if(!findStart)
-        sympolTable.insert(label , add);
+        if(!findStart){
+        labelInfo labelinfo(add , isAbsolute);
+        sympolTable.insert(label , labelinfo);
+
+        }
 
        }
         else if(isEQU){
+        cout<<"shit"<<endl;
+        labelInfo labelinfo(operand , isAbsolute);
+        sympolTable.insert(label , labelinfo);
 
-            sympolTable.insert(label , operand);
+       //     sympolTable.insert(label , operand);
 
        }
 
        else if(!notOk){
+                    cout<<"shit77"<<endl;
+
             string add = intToHexa(startAddress);
-            if(!findStart)
-        sympolTable.insert(label , add);
+            if(!findStart){
+
+            labelInfo labelinfo(add , isAbsolute);
+            sympolTable.insert(label , labelinfo);
+
+
+          //  sympolTable.insert(label , add);
+
+
+
+            }
        }
 
 
     }
+
+    cout<<notOk<<"!!!!!"<<endl;
 }
 
 
@@ -928,7 +1064,7 @@ bool Validator :: isValid(){
     return notOk;
 }
 
-HashTable<string , string> Validator :: getSympolTable(){
+HashTable<string , labelInfo> Validator :: getSympolTable(){
 
 return sympolTable;
 

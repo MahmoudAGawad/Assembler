@@ -11,7 +11,7 @@
 #include "includes.h"
 #include "operationInfo.h"
 #include "HashTable.cpp"
-
+#include "labelInfo.h"
 using namespace std;
 class Validator{
 
@@ -25,7 +25,7 @@ public :
     bool isValid();
     string getError();
     string getAddress();
-    HashTable<string , string> getSympolTable();
+    HashTable<string , labelInfo> getSympolTable();
 protected:
 
     void checkSyntax(string label , string operation , string operand); // check the syntax of the operation
@@ -33,6 +33,7 @@ protected:
     bool checkLabelSyntax(string label); // to check if the label is correct
     bool checkOpernadSyntax(string operand);
     bool checkDirectiveOpernadSyntax( string operation , string operand);
+    bool isAbsoluteExpression(string expr);
     int validHexa(string num); // to check if the num is correct hexa if true return the value ,else return -1
     int validInt(string num); // to check if the num is correct integer
     bool split(string operand , string reg[]);
@@ -41,14 +42,17 @@ protected:
 
     bool findStart;
     bool notOk ;
+    bool LTORG;
     bool isEQU ;
+    bool isAbsolute;
     int startAddress ;
     int prevAddress ;
     int format ;
     static const int maxSpace = 1048576 ;
-    HashTable<string , string> sympolTable;    // the table containing all the sympols
+    HashTable<string , labelInfo> sympolTable;    // the table containing all the sympols
     HashTable<string , operationInfo> operationTable; // the table containing all the informathion about the operation
-    HashTable<string , string> literalTable ;
+    HashTable<string , int> tempLiteralTable ;
+    HashTable<string , string>literalTable;
     string error ;                          // the error message
 private:
 
