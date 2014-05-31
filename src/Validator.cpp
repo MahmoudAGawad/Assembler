@@ -264,7 +264,7 @@ int Validator :: validHexa(string num) {
 
 int Validator :: validInt(string num) {
 
-
+    if(num == "*") return startAddress;
     int len = num.length();
     int value = 0;
     int index = 0;
@@ -297,6 +297,95 @@ int Validator :: validInt(string num) {
     }
 
     return value;
+
+
+}
+
+
+bool Validator :: checkLiteralSyntax(string operation ,string operand){
+
+        string word = operand;
+        // to store the (C or X or W)
+        string type = "";
+        //to store the value without ( ' or x or c)
+        string oper = "";
+        bool findColon1 = false , findColon2 = false , wrong = false , alreadyFounndColon = false;
+
+        for(int i = 1 ; i < word.length() ; i++){
+
+            if(!findColon1 && !findColon2){
+                if(alreadyFounndColon)wrong = true;
+
+                type += word[i];
+            }
+            else if(!findColon1 && word[i] =='\''){
+                alreadyFounndColon = true;
+                findColon1 = true;
+            }
+            else if(!findColon2 && word[i] =='\''){
+                findColon2 = true;
+            }
+
+            else if(findColon1 && !findColon2){
+                oper += word[i];
+            }
+
+
+
+        }
+
+        if(wrong || !alreadyFounndColon || !findColon2){
+            notOk = true;
+            error = "not valid literal !";
+            return false;
+        }
+        // if it is empty or W then it should be valid decimal number
+        else if(type == "" || type == "w" || type == "W"){
+            int value = validInt(oper);
+
+            if(value == -10000){
+                notOk = true;
+                error = "not valid decimal number !";
+                return false;
+            }
+            // if it is valid put it in the literal table
+            literalTable.insert(operand , startAddress);
+
+
+
+        }
+        // if it is C then it is a string
+        else if(type == "C" || type == "c"){
+            if((operation == "LDCH" && oper.length() != 1)|| oper.length()!=3){
+                notOk = true;
+                error = "illegal operand !";
+                return false;
+            }
+
+            // then it is true
+
+            literalTable.insert(operand , startAddress);
+        }
+
+        else if(type == "X" || type == "x" ){
+            // if it is X then it is hexa number
+            int value = validHexa(oper);
+            if(value == -1){
+                // not valid hexa
+                notOk = true;
+                error = "not valid hexa number !";
+                return false;
+            }
+            literalTable.insert(operand , startAddress);
+
+        }
+        else {
+            notOk = true;
+            error = "unknown type !";
+            return false;
+        }
+
+
 
 
 }
@@ -774,6 +863,14 @@ void Validator :: checkSyntax(string label , string operation , string operand) 
                             else return;
 
                         }
+                        // if it starts with (=) then it is literal
+                        else if(reg[0][0] == '='){
+
+
+
+                        }
+
+
                         else{
 //                                cout<<"yes from else"<<endl;
 

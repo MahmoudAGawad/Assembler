@@ -82,7 +82,13 @@ public:
 		table = new Entry<K,V>[_SIZE];
 	}
 
+    void init(){
+        kill();
 
+        entries = cursor = 0;
+		_SIZE=128;
+		table = new Entry<K,V>[_SIZE];
+    }
 	bool insert(K key, V value);
 	bool _delete(K key);
 	V get(K key);

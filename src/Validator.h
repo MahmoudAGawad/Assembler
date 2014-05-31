@@ -29,7 +29,7 @@ public :
 protected:
 
     void checkSyntax(string label , string operation , string operand); // check the syntax of the operation
-
+    bool checkLiteralSyntax(string operation ,string operand);
     bool checkLabelSyntax(string label); // to check if the label is correct
     bool checkOpernadSyntax(string operand);
     bool checkDirectiveOpernadSyntax( string operation , string operand);
@@ -48,6 +48,7 @@ protected:
     static const int maxSpace = 1048576 ;
     HashTable<string , string> sympolTable;    // the table containing all the sympols
     HashTable<string , operationInfo> operationTable; // the table containing all the informathion about the operation
+    HashTable<string , string> literalTable ;
     string error ;                          // the error message
 private:
 
